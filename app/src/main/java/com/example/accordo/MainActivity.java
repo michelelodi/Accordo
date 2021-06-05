@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -21,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences prefs;
     private SharedPreferences.Editor editor;
     private TextView t;
+    private int currentVersionCode;
 
     private final String CURRENT_USER = "current_user";
     private final String APP_PREFS = "accordo_prefs";
@@ -38,27 +40,25 @@ public class MainActivity extends AppCompatActivity {
 
         checkFirstRun();
 
-        t.setText(prefs.getString(CURRENT_USER,"pippo"));
+        if(prefs.getString(CURRENT_USER,null) != null) t.setText(prefs.getString(CURRENT_USER,null));
 
     }
 
     private void checkFirstRun() {
 
-        int currentVersionCode = BuildConfig.VERSION_CODE;
+        currentVersionCode = BuildConfig.VERSION_CODE;
 
         SharedPreferences prefs = getSharedPreferences(APP_PREFS, MODE_PRIVATE);
         int savedVersionCode = prefs.getInt(PREF_VERSION_CODE_KEY, DOESNT_EXIST);
 
         if (savedVersionCode == DOESNT_EXIST) {
-
-            //first run
             RequestQueue rq = Volley.newRequestQueue(getApplicationContext());
 
-            final JSONObject jsonStudent = new JSONObject();
+            final JSONObject jsonBody = new JSONObject();
             final String url = "https://ewserver.di.unimi.it/mobicomp/accordo/register.php";
 
             JsonObjectRequest listRequest = new JsonObjectRequest(
-                    url, jsonStudent,
+                    Request.Method.POST, url, jsonBody,
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
@@ -74,13 +74,13 @@ public class MainActivity extends AppCompatActivity {
 
                 public void onErrorResponse(VolleyError error) {
                     Log.d(TAG, "REQUEST FAILED");
+                    currentVersionCode = DOESNT_EXIST;
+                    t.setText("An error occured. Close and reopen the app.");
                 }
             }
             );
             rq.add(listRequest);
 
-        } else if (currentVersionCode > savedVersionCode) {
-            // TODO This is an upgrade
         }
 
         editor.putInt(PREF_VERSION_CODE_KEY, currentVersionCode).apply();
