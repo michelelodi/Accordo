@@ -1,4 +1,4 @@
-package com.example.accordo;
+package com.example.accordo.data;
 
 public class TextPost extends Post{
 

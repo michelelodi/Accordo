@@ -1,4 +1,4 @@
-package com.example.accordo;
+package com.example.accordo.data;
 
 import java.util.Base64;
 
