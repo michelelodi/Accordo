@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.example.accordo.controller.ConnectionController;
+import com.example.accordo.controller.SharedPreferencesController;
 import com.example.accordo.data.CurrentUser;
 
 import org.json.JSONException;
@@ -21,11 +22,11 @@ public class MainActivity extends AppCompatActivity {
     private int currentVersionCode;
 
     private final String CURRENT_USER = "current_user";
-    private final String APP_PREFS = "accordo_prefs";
     private final String PREF_VERSION_CODE_KEY = "version";
     private final int DOESNT_EXIST = -1;
     private final String TAG = "MYTAG";
     private ConnectionController cc;
+    private SharedPreferencesController spc;
     private CurrentUser cU;
 
     @Override
@@ -33,40 +34,40 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SharedPreferences prefs;
-        prefs = getSharedPreferences(APP_PREFS,0);
-
-        SharedPreferences.Editor editor;
-        editor = prefs.edit();
-
-        t = findViewById(R.id.tt);
+        spc = new SharedPreferencesController(this);
         cc = new ConnectionController(this);
 
-        checkFirstRun(editor);
+        checkFirstRun();
 
-        if(prefs.getString(CURRENT_USER,null) != null) t.setText(prefs.getString(CURRENT_USER,null));
+        Bundle bundle = new Bundle();
+        bundle.putInt("some_int", 0);
+
+        getSupportFragmentManager().beginTransaction()
+                .setReorderingAllowed(true)
+                .add(R.id.fragment_container_view, WallFragment.class, bundle)
+                .commit();
+
+        //if(prefs.getString(CURRENT_USER,null) != null) t.setText(prefs.getString(CURRENT_USER,null));
 
     }
 
-    private void checkFirstRun(SharedPreferences.Editor editor) {
+    private void checkFirstRun() {
 
         currentVersionCode = BuildConfig.VERSION_CODE;
 
-        SharedPreferences prefs = getSharedPreferences(APP_PREFS, MODE_PRIVATE);
-        int savedVersionCode = prefs.getInt(PREF_VERSION_CODE_KEY, DOESNT_EXIST);
+        int savedVersionCode = spc.readIntFromSP(PREF_VERSION_CODE_KEY, DOESNT_EXIST);
 
         if (savedVersionCode == DOESNT_EXIST) {
-            cc.register( response -> createUser(response, editor),
+            cc.register( response -> createUser(response),
                     error -> notifyUser(error) );
         }
 
-        editor.putInt(PREF_VERSION_CODE_KEY, currentVersionCode).apply();
+        spc.writeIntToSP(PREF_VERSION_CODE_KEY, currentVersionCode);
     }
 
-    private void createUser(JSONObject response, SharedPreferences.Editor editor) {
+    private void createUser(JSONObject response) {
         try {
-            editor.putString(CURRENT_USER, response.get("sid").toString()).apply();
-            t.setText(response.get("sid").toString());
+            spc.writeStringToSP(CURRENT_USER, response.get("sid").toString());
             // TODO: aggiungi al model new CurrentUser(response.get("uid").toString(), response.get("sid").toString());
         } catch (JSONException e) {
             e.printStackTrace();
@@ -76,6 +77,5 @@ public class MainActivity extends AppCompatActivity {
     private void notifyUser(VolleyError error) {
         Log.d(TAG, error.toString());
         currentVersionCode = DOESNT_EXIST;
-        t.setText("An error occurred. Close and reopen the app.");
     }
 }
