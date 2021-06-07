@@ -2,12 +2,10 @@ package com.example.accordo;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.example.accordo.controller.ConnectionController;
 import com.example.accordo.controller.SharedPreferencesController;
