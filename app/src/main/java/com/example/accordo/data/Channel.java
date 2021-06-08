@@ -9,4 +9,12 @@ public class Channel {
         this.ctitle = ctitle;
         this.creator = creator;
     }
+
+    public String getCTitle() {
+        return ctitle;
+    }
+
+    public User getCreator() {
+        return creator;
+    }
 }

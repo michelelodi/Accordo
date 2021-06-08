@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.example.accordo.controller.ConnectionController;
 import com.example.accordo.controller.SharedPreferencesController;
+import com.example.accordo.data.AppModel;
 import com.example.accordo.data.CurrentUser;
 
 import org.json.JSONException;
@@ -45,8 +46,6 @@ public class MainActivity extends AppCompatActivity {
                 .add(R.id.fragment_container_view, WallFragment.class, bundle)
                 .commit();
 
-        //if(prefs.getString(CURRENT_USER,null) != null) t.setText(prefs.getString(CURRENT_USER,null));
-
     }
 
     private void checkFirstRun() {
@@ -66,7 +65,11 @@ public class MainActivity extends AppCompatActivity {
     private void createUser(JSONObject response) {
         try {
             spc.writeStringToSP(CURRENT_USER, response.get("sid").toString());
-            // TODO: aggiungi al model new CurrentUser(response.get("uid").toString(), response.get("sid").toString());
+
+            //TODO: in realtà andrà salvato su room
+            AppModel.getInstance()
+                    .addUser(new CurrentUser(response.get("uid").toString(),
+                            response.get("sid").toString()));
         } catch (JSONException e) {
             e.printStackTrace();
         }

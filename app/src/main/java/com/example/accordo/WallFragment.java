@@ -17,6 +17,7 @@ public class WallFragment extends Fragment {
 
     private SharedPreferencesController spc;
     private final String CURRENT_USER = "current_user";
+    private final String DOESNT_EXIST = "-1";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -30,6 +31,6 @@ public class WallFragment extends Fragment {
 
         spc = new SharedPreferencesController(getContext());
         TextView tv = getActivity().findViewById(R.id.tv);
-        tv.setText(spc.readStringFromSP(CURRENT_USER, "-1"));
+        tv.setText(spc.readStringFromSP(CURRENT_USER, DOESNT_EXIST));
     }
 }

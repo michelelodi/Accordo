@@ -16,4 +16,28 @@ public class User {
         this.pversion = pversion;
         this.uid = uid;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getPversion() {
+        return pversion;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public Base64 getPicture() {
+        return picture;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPicture(Base64 picture) {
+        this.picture = picture;
+    }
 }
