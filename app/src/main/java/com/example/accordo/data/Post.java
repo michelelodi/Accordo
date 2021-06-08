@@ -1,14 +1,5 @@
 package com.example.accordo.data;
 
-public abstract class Post {
+public interface Post {
 
-    private int pid;
-    private User author;
-    private String ctitle;
-
-    public Post(int pid, User author, String ctitle) {
-        this.pid = pid;
-        this.author = author;
-        this.ctitle = ctitle;
-    }
 }

@@ -1,11 +1,16 @@
 package com.example.accordo.data;
 
-public class TextPost extends Post{
+public class TextPost implements Post{
 
+    private String pid,ctitle;
+    private User author;
     private String content;
 
-    public TextPost(int pid, User author, String ctitle, String content) {
-        super(pid, author, ctitle);
+    public TextPost(String pid, User author, String ctitle, String content) {
+
+        this.pid = pid;
+        this.author = author;
+        this.ctitle = ctitle;
         this.content = content;
     }
 }
