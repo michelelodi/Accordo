@@ -1,4 +1,4 @@
-package com.example.accordo.data;
+package com.accordo.data;
 
 import java.util.Base64;
 
@@ -15,4 +15,8 @@ public class ImagePost implements Post{
         this.content = content;
     }
 
+    @Override
+    public void setContent() {
+
+    }
 }

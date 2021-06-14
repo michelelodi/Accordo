@@ -1,6 +1,6 @@
-package com.example.accordo;
+package com.accordo;
 
-import com.example.accordo.data.User;
+import com.accordo.data.User;
 
 import org.junit.Test;
 

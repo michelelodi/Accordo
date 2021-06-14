@@ -1,4 +1,4 @@
-package com.example.accordo.data;
+package com.accordo.data;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,9 +11,9 @@ public class AppModel {
     private List<Post> posts;
 
     public AppModel(){
-        users = new ArrayList<User>();
-        channels = new ArrayList<Channel>();
-        posts = new ArrayList<Post>();
+        users = new ArrayList<>();
+        channels = new ArrayList<>();
+        posts = new ArrayList<>();
     }
 
     public static synchronized AppModel getInstance() {
@@ -32,4 +32,12 @@ public class AppModel {
     public void addPost(Post post) { posts.add(post); }
 
     public void addUser(User user) { users.add(user); }
+
+    public List<Channel> getChannel(User creator) {
+        List<Channel> creatorChannels = new ArrayList<>();
+        for(Channel ch : channels)
+            if(ch.getCreator().getUid().equals(creator.getUid()))
+                creatorChannels.add(ch);
+        return creatorChannels;
+    }
 }

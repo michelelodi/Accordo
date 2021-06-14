@@ -1,4 +1,4 @@
-package com.example.accordo.data;
+package com.accordo.data;
 
 public class Channel {
 

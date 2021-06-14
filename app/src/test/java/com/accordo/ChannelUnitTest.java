@@ -1,11 +1,12 @@
-package com.example.accordo;
+package com.accordo;
 
-import com.example.accordo.data.Channel;
-import com.example.accordo.data.User;
+import com.accordo.data.Channel;
+import com.accordo.data.User;
 
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 public class ChannelUnitTest {
 
@@ -15,7 +16,9 @@ public class ChannelUnitTest {
     private Channel channel = new Channel(CTITLE, user);
 
     @Test
-    public void testGetCTitleFail() { assertEquals("UID", channel.getCTitle()); }
+    public void testGetCTitleFail() {
+        assertEquals("Okay sono diversi!", channel.getCTitle().equals(UID));
+    }
 
     @Test
     public void testGetCTitleSuccess(){ assertEquals(CTITLE, channel.getCTitle()); }

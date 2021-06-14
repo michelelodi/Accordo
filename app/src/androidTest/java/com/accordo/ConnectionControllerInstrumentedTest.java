@@ -1,9 +1,9 @@
-package com.example.accordo;
+package com.accordo;
 
 import android.content.Context;
 import android.util.Log;
 
-import com.example.accordo.controller.ConnectionController;
+import com.accordo.controller.ConnectionController;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -21,7 +21,7 @@ import static org.junit.Assert.*;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 @RunWith(AndroidJUnit4.class)
-public class ExampleInstrumentedTest {
+public class ConnectionControllerInstrumentedTest {
     private final String TAG = "MYTAG";
     @Test
     public void testRegister() throws InterruptedException {
@@ -40,12 +40,5 @@ public class ExampleInstrumentedTest {
                     lock.countDown();
                 });
         lock.await();
-    }
-
-    @Test
-    public void useAppContext() {
-        // Context of the app under test.
-        Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("com.example.accordo", appContext.getPackageName());
     }
 }

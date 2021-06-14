@@ -1,18 +1,28 @@
-package com.example.accordo.controller;
+package com.accordo.controller;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.accordo.MainActivity;
+
 public class SharedPreferencesController {
+
+    private static SharedPreferencesController instance = null;
+    private final SharedPreferences prefs;
+    private final SharedPreferences.Editor editor;
 
     private final String APP_PREFS = "accordo_prefs";
 
-    SharedPreferences prefs;
-    SharedPreferences.Editor editor;
-
-    public SharedPreferencesController(Context context) {
+    private SharedPreferencesController(Context context) {
         this.prefs = context.getSharedPreferences(APP_PREFS,0);
         this.editor = prefs.edit();
+    }
+
+    public static synchronized SharedPreferencesController getInstance() {
+        if (instance == null) {
+            instance = new SharedPreferencesController((new MainActivity()).getAppContext());
+        }
+        return instance;
     }
 
     public int readIntFromSP(String key, int defaultValue) {

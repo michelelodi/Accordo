@@ -1,4 +1,4 @@
-package com.example.accordo.data;
+package com.accordo.data;
 
 public class TextPost implements Post{
 
@@ -12,5 +12,10 @@ public class TextPost implements Post{
         this.author = author;
         this.ctitle = ctitle;
         this.content = content;
+    }
+
+    @Override
+    public void setContent() {
+
     }
 }
