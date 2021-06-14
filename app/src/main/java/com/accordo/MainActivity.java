@@ -7,7 +7,9 @@ import android.util.Log;
 import com.accordo.controller.ConnectionController;
 import com.accordo.controller.SharedPreferencesController;
 import com.accordo.data.AppModel;
+import com.accordo.data.Channel;
 import com.accordo.data.CurrentUser;
+import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
 import org.json.JSONException;
@@ -25,69 +27,81 @@ public class MainActivity extends AppCompatActivity {
     private final String TAG = "MYTAG";
     private ConnectionController cc;
     private String myUid;
-    private Context context;
+    private static Context context;
+    private SharedPreferencesController spc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         this.context = getApplicationContext();
+        spc = SharedPreferencesController.getInstance();
 
-        checkFirstRun();
+        firstRunSetUp();
+
+        cc.getWall("" + spc.readStringFromSP(CURRENT_USER,"" + DOESNT_EXIST),
+                (Response.Listener<JSONObject>) this::getWallResponse,
+                this::getWallError);
 
     }
 
-    private void checkFirstRun() {
+    private void firstRunSetUp() {
 
         cc = new ConnectionController(this);
         currentVersionCode = BuildConfig.VERSION_CODE;
 
-        int savedVersionCode = SharedPreferencesController.getInstance().readIntFromSP(PREF_VERSION_CODE_KEY, DOESNT_EXIST);
+        int savedVersionCode = spc.readIntFromSP(PREF_VERSION_CODE_KEY, DOESNT_EXIST);
 
         if (savedVersionCode == DOESNT_EXIST) {
-            cc.register(this::createUser,
-                    this::notifyUser);
+            cc.register(this::registrationResponse,
+                    this::registrationError);
         }
 
-        SharedPreferencesController.getInstance().writeIntToSP(PREF_VERSION_CODE_KEY, currentVersionCode);
+        spc.writeIntToSP(PREF_VERSION_CODE_KEY, currentVersionCode);
+
     }
 
-    private void createUser(JSONObject response) {
+    private void registrationResponse(JSONObject response) {
         try {
-            String mySid = response.get("sid").toString();
-            SharedPreferencesController.getInstance().writeStringToSP(CURRENT_USER, mySid);
+
+            spc.writeStringToSP(CURRENT_USER, "" + response.get("sid"));
+
+            cc.getWall("" + response.get("sid"),
+                    (Response.Listener<JSONObject>) this::getWallResponse,
+                    this::getWallError);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void getWallResponse(JSONObject response){
+        try {
+            for (int i = 0; i < response.getJSONArray("channels").length(); i++) {
+                AppModel.getInstance().addChannel((new Channel(response.getJSONArray("channels").getJSONObject(i).get("ctitle").toString(),
+                        response.getJSONArray("channels").getJSONObject(i).get("mine").toString().equals("t"))));
+            }
+            //open WallFragment
             getSupportFragmentManager().beginTransaction()
                     .setReorderingAllowed(true)
                     .add(R.id.fragment_container_view, WallFragment.class, new Bundle())
                     .commit();
-            cc.getProfile(mySid, this::handleFromResponse, this::handleError);
-
-            //TODO: in realtà andrà salvato su room
-            AppModel.getInstance()
-                    .addUser(new CurrentUser(myUid,
-                            response.get("sid").toString()));
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    private void notifyUser(VolleyError error) {
+    private void getWallError(VolleyError error){
         Log.e(TAG, error.toString());
+        //TODO handle error
+    }
+
+    private void registrationError(VolleyError error) {
+        Log.e(TAG, error.toString());
+        //TODO handle error
         currentVersionCode = DOESNT_EXIST;
     }
 
-    private void handleFromResponse(JSONObject response){
-        try {
-            myUid = response.get("uid").toString();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void handleError(VolleyError error){
-        Log.e(TAG,error.toString());
-    }
-
-    public synchronized Context getAppContext() { return context; }
+    public static synchronized Context getAppContext() { return context; }
 }

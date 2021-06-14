@@ -20,21 +20,18 @@ public class SharedPreferencesController {
 
     public static synchronized SharedPreferencesController getInstance() {
         if (instance == null) {
-            instance = new SharedPreferencesController((new MainActivity()).getAppContext());
+            instance = new SharedPreferencesController(MainActivity.getAppContext());
         }
         return instance;
     }
 
-    public int readIntFromSP(String key, int defaultValue) {
-        return prefs.getInt(key, defaultValue);
-    }
+    public int readIntFromSP(String key, int defaultValue) { return prefs.getInt(key, defaultValue); }
 
     public void writeIntToSP(String key, int value) {
         editor.putInt(key, value).apply();
     }
-    public String readStringFromSP(String key, String defaultValue) {
-        return prefs.getString(key, defaultValue);
-    }
+
+    public String readStringFromSP(String key, String defaultValue) { return prefs.getString(key, defaultValue); }
 
 
     public void writeStringToSP(String key, String value) {

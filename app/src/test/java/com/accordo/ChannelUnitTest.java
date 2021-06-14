@@ -12,8 +12,7 @@ public class ChannelUnitTest {
 
     private final String UID = "uid";
     private final String CTITLE = "ctitle";
-    private User user = new User(UID);
-    private Channel channel = new Channel(CTITLE, user);
+    private Channel channel = new Channel(CTITLE, true);
 
     @Test
     public void testGetCTitleFail() {

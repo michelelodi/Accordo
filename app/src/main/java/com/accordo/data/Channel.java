@@ -3,9 +3,9 @@ package com.accordo.data;
 public class Channel {
 
     private String ctitle;
-    private User creator;
+    private boolean creator;
 
-    public Channel(String ctitle, User creator) {
+    public Channel(String ctitle, boolean creator) {
         this.ctitle = ctitle;
         this.creator = creator;
     }
@@ -14,7 +14,7 @@ public class Channel {
         return ctitle;
     }
 
-    public User getCreator() {
+    public boolean isMine() {
         return creator;
     }
 }

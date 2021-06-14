@@ -9,6 +9,7 @@ public class AppModel {
     private List<User> users;
     private List<Channel> channels;
     private List<Post> posts;
+    private User currentUser;
 
     public AppModel(){
         users = new ArrayList<>();
@@ -21,23 +22,30 @@ public class AppModel {
         return instance;
     }
 
-    public List<Channel> getAllChannels() { return channels; }
-
-    public List<Post> getAllPosts() { return posts; }
-
-    public List<User> getAllUsers() { return users; }
-
     public void addChannel(Channel channel) { channels.add(channel); }
 
     public void addPost(Post post) { posts.add(post); }
 
     public void addUser(User user) { users.add(user); }
 
-    public List<Channel> getChannel(User creator) {
-        List<Channel> creatorChannels = new ArrayList<>();
-        for(Channel ch : channels)
-            if(ch.getCreator().getUid().equals(creator.getUid()))
-                creatorChannels.add(ch);
-        return creatorChannels;
-    }
+    public List<Channel> getAllChannels() { return channels; }
+
+    public List<Post> getAllPosts() { return posts; }
+
+    public List<User> getAllUsers() { return users; }
+
+    public Channel getChannel(int position) { return channels.get(position); }
+
+    public int getChannelsSize() {return channels.size();}
+
+
+
+
+
+
+
+
+
+
+
 }
