@@ -6,12 +6,21 @@ import java.util.Arrays;
 
 public class LocationPost implements Post{
 
-    private String pid, author;
+    private String pid, author, cTitle;
     String[] content;
 
-    public LocationPost(String pid, String author) {
+    public LocationPost(String pid, String author, String cTitle) {
         this.pid = pid;
         this.author = author;
+        this.cTitle = cTitle;
+    }
+
+    @Override
+    public String getAuthor() { return author; }
+
+    @Override
+    public String getContent() {
+        return Arrays.toString(content);
     }
 
     @Override

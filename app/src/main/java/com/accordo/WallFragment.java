@@ -47,7 +47,7 @@ public class WallFragment extends Fragment {
     public void onViewCreated(@NonNull @org.jetbrains.annotations.NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        RecyclerView rv = view.findViewById(R.id.recyclerView);
+        RecyclerView rv = view.findViewById(R.id.wallRecyclerView);
         ChannelAdapter adapter = new ChannelAdapter(getContext(), this::handleListClick);
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
         rv.setAdapter(adapter);
@@ -93,19 +93,19 @@ public class WallFragment extends Fragment {
         try {
             switch (post.get("type").toString()) {
                 case "t": {
-                    p = new TextPost(post.get("pid").toString(), post.get("uid").toString());
+                    p = new TextPost(post.get("pid").toString(), post.get("uid").toString(), cTitle);
                     p.setContent(post.get("content").toString());
                     model.addPost(p, cTitle);
                     break;
                 }
                 case "i": {
-                    p = new ImagePost(post.get("pid").toString(), post.get("uid").toString());
+                    p = new ImagePost(post.get("pid").toString(), post.get("uid").toString(), cTitle);
                     p.setContent(post.get("content").toString());
                     model.addPost(p, cTitle);
                     break;
                 }
                 case "l": {
-                    p = new LocationPost(post.get("pid").toString(), post.get("uid").toString());
+                    p = new LocationPost(post.get("pid").toString(), post.get("uid").toString(), cTitle);
                     p.setContent(post.get("lat").toString() + "," + post.get("lon").toString());
                     model.addPost(p, cTitle);
                     break;
