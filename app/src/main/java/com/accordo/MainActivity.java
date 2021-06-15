@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private final String CURRENT_USER = "current_user";
     private final String PREF_VERSION_CODE_KEY = "version";
     private final int DOESNT_EXIST = -1;
-    private final String TAG = "MYTAG";
+    private final String TAG = "MYTAG_MainActivity";
     private ConnectionController cc;
     private String myUid;
     private static Context context;
@@ -93,12 +93,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getWallError(VolleyError error){
-        Log.e(TAG, error.toString());
+        Log.e(TAG, error.toString() + " in getWall");
         //TODO handle error
     }
 
     private void registrationError(VolleyError error) {
-        Log.e(TAG, error.toString());
+        Log.e(TAG, error.toString() + " in registration");
         //TODO handle error
         currentVersionCode = DOESNT_EXIST;
     }

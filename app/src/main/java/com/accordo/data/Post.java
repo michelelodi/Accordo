@@ -1,6 +1,10 @@
 package com.accordo.data;
 
+import org.jetbrains.annotations.NotNull;
+
 public interface Post {
 
-    void setContent();
+    void setContent(String content);
+
+    @NotNull String toString();
 }

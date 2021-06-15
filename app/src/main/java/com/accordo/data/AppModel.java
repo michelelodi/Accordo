@@ -1,6 +1,12 @@
 package com.accordo.data;
 
+import android.util.Log;
+
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class AppModel {
@@ -8,13 +14,13 @@ public class AppModel {
     private static AppModel instance;
     private List<User> users;
     private List<Channel> channels;
-    private List<Post> posts;
-    private User currentUser;
+    private HashMap<String, ArrayList<Post>> posts;
+    private final String TAG = "MYTAG_AppModel";
 
     public AppModel(){
         users = new ArrayList<>();
         channels = new ArrayList<>();
-        posts = new ArrayList<>();
+        posts = new HashMap<>();
     }
 
     public static synchronized AppModel getInstance() {
@@ -24,28 +30,25 @@ public class AppModel {
 
     public void addChannel(Channel channel) { channels.add(channel); }
 
-    public void addPost(Post post) { posts.add(post); }
+    public void addPost(Post post, String cTitle) {
 
-    public void addUser(User user) { users.add(user); }
+        ArrayList<Post> temp = posts.getOrDefault(cTitle, new ArrayList<>());
+        if (temp != null) temp.add(post);
 
-    public List<Channel> getAllChannels() { return channels; }
+        posts.put(cTitle,temp);
+    }
 
-    public List<Post> getAllPosts() { return posts; }
+    public int channelSize(String cTitle) {
+        if(posts.get(cTitle) != null) return posts.get(cTitle).size();
+        else return -1;
+    }
 
-    public List<User> getAllUsers() { return users; }
+    public int channelsSize() {return channels.size();}
+
+    public boolean hasChannel(String cTitle) { return posts.containsKey(cTitle); }
 
     public Channel getChannel(int position) { return channels.get(position); }
 
-    public int getChannelsSize() {return channels.size();}
-
-
-
-
-
-
-
-
-
-
+    public ArrayList<Post> getChannel(String cTitle) { return posts.get(cTitle); }
 
 }

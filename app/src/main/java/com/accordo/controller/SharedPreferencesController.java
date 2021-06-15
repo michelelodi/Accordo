@@ -27,12 +27,13 @@ public class SharedPreferencesController {
 
     public int readIntFromSP(String key, int defaultValue) { return prefs.getInt(key, defaultValue); }
 
+    public String readStringFromSP(String key, String defaultValue) { return prefs.getString(key, defaultValue); }
+
+    public void removeFromSP(String key) { editor.remove(key).apply(); }
+
     public void writeIntToSP(String key, int value) {
         editor.putInt(key, value).apply();
     }
-
-    public String readStringFromSP(String key, String defaultValue) { return prefs.getString(key, defaultValue); }
-
 
     public void writeStringToSP(String key, String value) {
         editor.putString(key, value).apply();

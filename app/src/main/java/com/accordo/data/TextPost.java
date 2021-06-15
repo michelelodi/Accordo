@@ -1,21 +1,29 @@
 package com.accordo.data;
 
+import org.jetbrains.annotations.NotNull;
+
 public class TextPost implements Post{
 
-    private String pid,ctitle;
-    private User author;
-    private String content;
+    private String pid, author, content;
 
-    public TextPost(String pid, User author, String ctitle, String content) {
+    public TextPost(String pid, String author) {
 
         this.pid = pid;
         this.author = author;
-        this.ctitle = ctitle;
+        this.content = null;
+    }
+
+    @Override
+    public void setContent(String content) {
         this.content = content;
     }
 
     @Override
-    public void setContent() {
-
+    public @NotNull String toString() {
+        return "TextPost{" +
+                "pid='" + pid + '\'' +
+                ", author='" + author + '\'' +
+                ", content='" + content + '\'' +
+                '}';
     }
 }

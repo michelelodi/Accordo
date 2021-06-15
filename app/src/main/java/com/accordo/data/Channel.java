@@ -1,5 +1,7 @@
 package com.accordo.data;
 
+import org.jetbrains.annotations.NotNull;
+
 public class Channel {
 
     private String ctitle;
@@ -16,5 +18,13 @@ public class Channel {
 
     public boolean isMine() {
         return creator;
+    }
+
+    @Override
+    public @NotNull String toString() {
+        return "Channel{" +
+                "ctitle='" + ctitle + '\'' +
+                ", creator=" + creator +
+                '}';
     }
 }

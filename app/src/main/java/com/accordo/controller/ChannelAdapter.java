@@ -39,5 +39,5 @@ public class ChannelAdapter extends RecyclerView.Adapter<ChannelViewHolder> {
     }
 
     @Override
-    public int getItemCount() { return AppModel.getInstance().getChannelsSize(); }
+    public int getItemCount() { return AppModel.getInstance().channelsSize(); }
 }

@@ -1,22 +1,27 @@
 package com.accordo.data;
 
-import java.util.Base64;
+
+import org.jetbrains.annotations.NotNull;
 
 public class ImagePost implements Post{
 
-    private String pid,ctitle;
-    private User author;
-    private Base64 content;
+    private String pid, author, content;
 
-    public ImagePost(String pid, User author, String ctitle, Base64 content) {
+    public ImagePost(String pid, String author) {
         this.pid = pid;
         this.author = author;
-        this.ctitle = ctitle;
-        this.content = content;
+        this.content = null;
     }
 
     @Override
-    public void setContent() {
+    public void setContent(String content) { this.content = content; }
 
+    @Override
+    public @NotNull String toString() {
+        return "ImagePost{" +
+                "pid='" + pid + '\'' +
+                ", author='" + author + '\'' +
+                ", content='" + content + '\'' +
+                '}';
     }
 }
