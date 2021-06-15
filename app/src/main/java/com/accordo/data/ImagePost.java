@@ -10,7 +10,6 @@ public class ImagePost implements Post{
     public ImagePost(String pid, String author) {
         this.pid = pid;
         this.author = author;
-        this.content = null;
     }
 
     @Override

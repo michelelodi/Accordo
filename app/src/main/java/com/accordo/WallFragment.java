@@ -6,25 +6,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.accordo.controller.ChannelAdapter;
 import com.accordo.controller.ConnectionController;
 import com.accordo.controller.SharedPreferencesController;
 import com.accordo.data.AppModel;
-import com.accordo.data.Channel;
 import com.accordo.data.ImagePost;
 import com.accordo.data.LocationPost;
 import com.accordo.data.Post;
 import com.accordo.data.TextPost;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Base64;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -54,65 +48,77 @@ public class WallFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         RecyclerView rv = view.findViewById(R.id.recyclerView);
-        ChannelAdapter adapter = new ChannelAdapter(getContext(), (v, position) -> {
-
-            //handle listClick
-            spc.writeStringToSP(CTITLE, model.getChannel(position).getCTitle());
-
-            ConnectionController cc = new ConnectionController(getContext());
-            if(model.hasChannel(model.getChannel(position).getCTitle())) {
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container_view, new ChannelFragment())
-                        .addToBackStack(null)
-                        .commit();
-            } else {
-                cc.getChannel(spc.readStringFromSP(CURRENT_USER, ""), model.getChannel(position).getCTitle(),
-                        (response) -> getChannelResponse(response, model.getChannel(position).getCTitle()),
-                        this::getChannelError);
-            }
-        });
-
+        ChannelAdapter adapter = new ChannelAdapter(getContext(), this::handleListClick);
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
         rv.setAdapter(adapter);
     }
 
+    private void handleListClick(View v, int position) {
+        spc.writeStringToSP(CTITLE, model.getChannel(position).getCTitle());
+
+        ConnectionController cc = new ConnectionController(getContext());
+
+        if(model.hasChannel(model.getChannel(position).getCTitle()))
+            openChannelFragment(model.getChannel(position).getCTitle());
+         else
+            cc.getChannel(spc.readStringFromSP(CURRENT_USER, ""), model.getChannel(position).getCTitle(),
+                    (response) -> getChannelResponse(response, model.getChannel(position).getCTitle()),
+                    this::getChannelError);
+    }
+
     private void getChannelResponse(JSONObject response, String cTitle){
-        Log.d(TAG,"response");
+
         try {
-
             for (int i = 0; i < response.getJSONArray("posts").length(); i++) {
-
                 JSONObject post = response.getJSONArray("posts").getJSONObject(i);
-                String type = post.get("type").toString();
-                switch (type) {
-                    case "t": {
-                        Post p = new TextPost(post.get("pid").toString(), post.get("uid").toString());
-                        p.setContent(post.get("content").toString());
-                        model.addPost(p, cTitle);
-                        break;
-                    }
-                    case "i": {
-                        Post p = new ImagePost(post.get("pid").toString(), post.get("uid").toString());
-                        p.setContent(post.get("content").toString());
-                        model.addPost(p, cTitle);
-                        break;
-                    }
-                    case "l": {
-                        Post p = new LocationPost(post.get("pid").toString(), post.get("uid").toString());
-                        p.setContent(post.get("lat").toString() + "," + post.get("lon").toString());
-                        model.addPost(p, cTitle);
-                        break;
-                    }
-                    default:
-                        break;
-                }
+
+                makePostFromResponseAndUpdateModel(post,cTitle);
 
             }
-
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        Log.d(TAG,"Channel has " + AppModel.getInstance().channelSize(cTitle) + " posts");
+        openChannelFragment(cTitle);
+    }
+
+    private void getChannelError(VolleyError error){
+        Log.e(TAG, error.toString());
+        //TODO handle error
+    }
+
+    private void makePostFromResponseAndUpdateModel(JSONObject post, String cTitle){
+        Post p;
+        try {
+            switch (post.get("type").toString()) {
+                case "t": {
+                    p = new TextPost(post.get("pid").toString(), post.get("uid").toString());
+                    p.setContent(post.get("content").toString());
+                    model.addPost(p, cTitle);
+                    break;
+                }
+                case "i": {
+                    p = new ImagePost(post.get("pid").toString(), post.get("uid").toString());
+                    p.setContent(post.get("content").toString());
+                    model.addPost(p, cTitle);
+                    break;
+                }
+                case "l": {
+                    p = new LocationPost(post.get("pid").toString(), post.get("uid").toString());
+                    p.setContent(post.get("lat").toString() + "," + post.get("lon").toString());
+                    model.addPost(p, cTitle);
+                    break;
+                }
+                default:
+                    break;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openChannelFragment(String cTitle){
         if(AppModel.getInstance().channelSize(cTitle) > -1) {
             getActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container_view, new ChannelFragment())
@@ -123,15 +129,12 @@ public class WallFragment extends Fragment {
             builder.setMessage("Please try with a different channel")
                     .setTitle("Something went wrong");
 
-            builder.setNegativeButton("Ok", (dialog, id) -> {
+            builder.setNegativeButton("Ok", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                }
             });
             AlertDialog dialog = builder.create();
             dialog.show();
         }
-    }
-
-    private void getChannelError(VolleyError error){
-        Log.e(TAG, error.toString());
-        //TODO handle error
     }
 }

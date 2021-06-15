@@ -8,7 +8,6 @@ import com.accordo.controller.ConnectionController;
 import com.accordo.controller.SharedPreferencesController;
 import com.accordo.data.AppModel;
 import com.accordo.data.Channel;
-import com.accordo.data.CurrentUser;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
@@ -22,7 +21,9 @@ public class MainActivity extends AppCompatActivity {
     private int currentVersionCode;
 
     private final String CURRENT_USER = "current_user";
+    private final String ERROR_TITLE = "Something went wrong";
     private final String PREF_VERSION_CODE_KEY = "version";
+    private final String ERROR_NEGATIVE_BUTTON_TEXT = "OK";
     private final int DOESNT_EXIST = -1;
     private final String TAG = "MYTAG_MainActivity";
     private ConnectionController cc;
@@ -81,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
                 AppModel.getInstance().addChannel((new Channel(response.getJSONArray("channels").getJSONObject(i).get("ctitle").toString(),
                         response.getJSONArray("channels").getJSONObject(i).get("mine").toString().equals("t"))));
             }
-            //open WallFragment
+
             getSupportFragmentManager().beginTransaction()
                     .setReorderingAllowed(true)
                     .add(R.id.fragment_container_view, WallFragment.class, new Bundle())
@@ -94,12 +95,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void getWallError(VolleyError error){
         Log.e(TAG, error.toString() + " in getWall");
-        //TODO handle error
     }
 
     private void registrationError(VolleyError error) {
         Log.e(TAG, error.toString() + " in registration");
-        //TODO handle error
         currentVersionCode = DOESNT_EXIST;
     }
 

@@ -10,7 +10,6 @@ public class TextPost implements Post{
 
         this.pid = pid;
         this.author = author;
-        this.content = null;
     }
 
     @Override

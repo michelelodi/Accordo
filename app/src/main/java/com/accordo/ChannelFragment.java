@@ -21,7 +21,7 @@ public class ChannelFragment extends Fragment {
     private AppModel model;
     private TextView tv;
     private SharedPreferencesController spc;
-    private final String CTITLE = "selected_ctitle";
+    private final String CTITLE = "lastChannel";
     private final String DOESNT_EXIST = "-1";
     private final String TAG = "MYTAG_ChannelFragment";
 
