@@ -33,7 +33,6 @@ public class WallFragment extends Fragment {
     SharedPreferencesController spc;
     private final String CURRENT_USER = "current_user";
     private final String TAG = "MYTAG_WallFragment";
-    private final String CTITLE = "lastChannel";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,7 +53,6 @@ public class WallFragment extends Fragment {
     }
 
     private void handleListClick(View v, int position) {
-        spc.writeStringToSP(CTITLE, model.getChannel(position).getCTitle());
 
         ConnectionController cc = new ConnectionController(getContext());
 
@@ -71,9 +69,7 @@ public class WallFragment extends Fragment {
         try {
             for (int i = 0; i < response.getJSONArray("posts").length(); i++) {
                 JSONObject post = response.getJSONArray("posts").getJSONObject(i);
-
                 makePostFromResponseAndUpdateModel(post,cTitle);
-
             }
 
         } catch (JSONException e) {
@@ -121,7 +117,7 @@ public class WallFragment extends Fragment {
     private void openChannelFragment(String cTitle){
         if(AppModel.getInstance().channelSize(cTitle) > -1) {
             getActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container_view, new ChannelFragment())
+                    .replace(R.id.fragment_container_view, ChannelFragment.newInstance(cTitle))
                     .addToBackStack(null)
                     .commit();
         }else {

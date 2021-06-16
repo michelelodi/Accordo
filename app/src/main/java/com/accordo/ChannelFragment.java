@@ -17,27 +17,38 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class ChannelFragment extends Fragment {
 
-    private AppModel model;
-    private SharedPreferencesController spc;
-    private final String CTITLE = "lastChannel";
-    private final String DOESNT_EXIST = "-1";
     private final String TAG = "MYTAG_ChannelFragment";
 
+    private static final String CTITLE = "cTitle";
+
+    String mCtitle;
+
+    public ChannelFragment() {}
+
+    public static ChannelFragment newInstance(String cTitle) {
+        ChannelFragment fragment = new ChannelFragment();
+        Bundle args = new Bundle();
+        args.putString(CTITLE, cTitle);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) mCtitle = getArguments().getString(CTITLE);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        model =AppModel.getInstance();
-        spc = SharedPreferencesController.getInstance();
-        return inflater.inflate(R.layout.fragment_channel, container, false);
-    }
+                             Bundle savedInstanceState) { return inflater.inflate(R.layout.fragment_channel, container, false); }
 
     @Override
     public void onViewCreated(@NonNull @org.jetbrains.annotations.NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         RecyclerView rv = view.findViewById(R.id.channelRecyclerView);
-        PostAdapter adapter = new PostAdapter(getContext(), this::handleListClick, spc.readStringFromSP(CTITLE,DOESNT_EXIST));
+        PostAdapter adapter = new PostAdapter(getContext(),this::handleListClick, mCtitle);
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
         rv.setAdapter(adapter);
     }
