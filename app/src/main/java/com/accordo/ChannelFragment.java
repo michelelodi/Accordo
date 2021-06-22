@@ -1,6 +1,7 @@
 package com.accordo;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,8 @@ import android.view.ViewGroup;
 import com.accordo.controller.PostAdapter;
 import com.accordo.controller.SharedPreferencesController;
 import com.accordo.data.AppModel;
+import com.accordo.data.LocationPost;
+import com.accordo.data.Post;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -54,6 +57,13 @@ public class ChannelFragment extends Fragment {
     }
 
     private void handleListClick(View v, int position){
-
+        Post p = AppModel.getInstance().getPost(mCtitle, position);
+        if(p instanceof LocationPost) {
+            String[] coords = ((LocationPost) p).getCoords();
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container_view, MapFragment.newInstance(coords[0],coords[1]))
+                    .addToBackStack(null)
+                    .commit();
+        }
     }
 }

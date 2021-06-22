@@ -49,7 +49,7 @@ public class AppModel {
 
     public Channel getChannel(int position) { return channels.get(position); }
 
-    public Post getPost(int position, String cTitle) { return posts.get(cTitle).get(position); }
+    public Post getPost(String cTitle, int position) { return posts.get(cTitle).get(position); }
 
     public ArrayList<Post> getChannel(String cTitle) { return posts.get(cTitle); }
 

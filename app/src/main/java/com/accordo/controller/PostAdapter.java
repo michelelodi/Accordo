@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 
 import com.accordo.R;
 import com.accordo.data.AppModel;
-import com.accordo.data.Channel;
 import com.accordo.data.Post;
 
 import org.jetbrains.annotations.NotNull;
@@ -37,7 +36,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull PostViewHolder holder, int position) {
-        Post p = AppModel.getInstance().getPost(position, cTitle);
+        Post p = AppModel.getInstance().getPost(cTitle, position);
         holder.updateContent(p.getContent(),p.getAuthor());
     }
 

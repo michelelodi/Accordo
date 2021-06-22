@@ -1,14 +1,27 @@
 package com.accordo.data;
 
-import org.jetbrains.annotations.NotNull;
+public abstract class Post {
 
-public interface Post {
+    private String pid, author, cTitle;
 
-    String getAuthor();
+    public Post(String pid, String author, String cTitle){
+        this.pid = pid;
+        this.author = author;
+        this.cTitle = cTitle;
+    }
 
-    String getContent();
+    public String getAuthor() {return author;};
 
-    void setContent(String content);
+    public abstract String getContent();
 
-    @NotNull String toString();
+    public abstract void setContent(String content);
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "pid='" + pid + '\'' +
+                ", author='" + author + '\'' +
+                ", cTitle='" + cTitle + '\'' +
+                '}';
+    }
 }
