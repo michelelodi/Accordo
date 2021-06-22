@@ -54,14 +54,14 @@ public class WallFragment extends Fragment {
 
     private void handleListClick(View v, int position) {
 
-        ConnectionController cc = new ConnectionController(getContext());
-
-        if(model.hasChannel(model.getChannel(position).getCTitle()))
-            openChannelFragment(model.getChannel(position).getCTitle());
-         else
+        if(model.hasFullChannel(model.getChannel(position).getCTitle()))
+            this.openChannelFragment(model.getChannel(position).getCTitle());
+        else {
+            ConnectionController cc = new ConnectionController(getContext());
             cc.getChannel(spc.readStringFromSP(CURRENT_USER, ""), model.getChannel(position).getCTitle(),
                     (response) -> getChannelResponse(response, model.getChannel(position).getCTitle()),
                     this::getChannelError);
+        }
     }
 
     private void getChannelResponse(JSONObject response, String cTitle){
@@ -76,7 +76,7 @@ public class WallFragment extends Fragment {
             e.printStackTrace();
         }
         Log.d(TAG,"Channel has " + AppModel.getInstance().channelSize(cTitle) + " posts");
-        openChannelFragment(cTitle);
+        this.openChannelFragment(cTitle);
     }
 
     private void getChannelError(VolleyError error){

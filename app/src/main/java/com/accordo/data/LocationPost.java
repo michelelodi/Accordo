@@ -10,16 +10,12 @@ public class LocationPost extends Post{
         super(pid, author, cTitle);
     }
 
-
     @Override
     public String getContent() {
         return Arrays.toString(content);
     }
 
-    public String[] getCoords() {
-        String[] coords = { content[0], content[1] };
-        return coords;
-    }
+    public String[] getCoords() { return content; }
 
     @Override
     public void setContent(String content) {

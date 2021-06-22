@@ -36,7 +36,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull PostViewHolder holder, int position) {
-        Post p = AppModel.getInstance().getPost(cTitle, position);
+        Post p = AppModel.getInstance().getChannelPost(cTitle, position);
         holder.updateContent(p.getContent(),p.getAuthor());
     }
 

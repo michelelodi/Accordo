@@ -1,11 +1,6 @@
 package com.accordo.data;
 
-import android.util.Log;
-
-import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -45,12 +40,10 @@ public class AppModel {
 
     public int channelsSize() {return channels.size();}
 
-    public boolean hasChannel(String cTitle) { return posts.containsKey(cTitle); }
+    public boolean hasFullChannel(String cTitle) { return posts.containsKey(cTitle); }
 
     public Channel getChannel(int position) { return channels.get(position); }
 
-    public Post getPost(String cTitle, int position) { return posts.get(cTitle).get(position); }
-
-    public ArrayList<Post> getChannel(String cTitle) { return posts.get(cTitle); }
+    public Post getChannelPost(String cTitle, int position) { return posts.get(cTitle).get(position); }
 
 }

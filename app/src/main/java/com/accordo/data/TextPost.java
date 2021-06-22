@@ -8,7 +8,6 @@ public class TextPost extends Post{
         super(pid, author, cTitle);
     }
 
-
     @Override
     public String getContent() {
         return content;

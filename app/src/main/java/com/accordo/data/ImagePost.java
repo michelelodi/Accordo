@@ -9,7 +9,6 @@ public class ImagePost extends Post{
         super(pid, author, cTitle);
     }
 
-
     @Override
     public String getContent() {
         return content;
