@@ -1,5 +1,8 @@
 package com.accordo.data;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,6 +33,35 @@ public class AppModel {
         if (temp != null) temp.add(post);
 
         posts.put(cTitle,temp);
+    }
+
+    public void addPost(JSONObject post, String cTitle) {
+        Post p = null;
+        try {
+            switch (post.get("type").toString()) {
+                case "t": {
+                    p = new TextPost(post.get("pid").toString(), post.get("uid").toString(), cTitle, null);
+                    p.setContent(post.get("content").toString());
+                    break;
+                }
+                case "i": {
+                    p = new ImagePost(post.get("pid").toString(), post.get("uid").toString(), cTitle, null);
+                    break;
+                }
+                case "l": {
+                    p = new LocationPost(post.get("pid").toString(), post.get("uid").toString(), cTitle, null);
+                    p.setContent(post.get("lat").toString() + "," + post.get("lon").toString());
+                    break;
+                }
+                default:
+                    break;
+            }
+            ArrayList<Post> temp = posts.getOrDefault(cTitle, new ArrayList<>());
+            if (temp != null && p != null) temp.add(p);
+            posts.put(cTitle,temp);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     public int channelSize(String cTitle) {
