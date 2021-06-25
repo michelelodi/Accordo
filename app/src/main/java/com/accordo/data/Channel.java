@@ -4,16 +4,16 @@ import org.jetbrains.annotations.NotNull;
 
 public class Channel {
 
-    private String ctitle;
+    private String cTitle;
     private boolean creator;
 
-    public Channel(String ctitle, boolean creator) {
-        this.ctitle = ctitle;
+    public Channel(String cTitle, boolean creator) {
+        this.cTitle = cTitle;
         this.creator = creator;
     }
 
     public String getCTitle() {
-        return ctitle;
+        return cTitle;
     }
 
     public boolean isMine() {
@@ -23,7 +23,7 @@ public class Channel {
     @Override
     public @NotNull String toString() {
         return "Channel{" +
-                "ctitle='" + ctitle + '\'' +
+                "cTitle='" + cTitle + '\'' +
                 ", creator=" + creator +
                 '}';
     }

@@ -24,11 +24,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class WallFragment extends Fragment {
 
-    AppModel model;
-    ConnectionController cc;
-    SharedPreferencesController spc;
     private final String CURRENT_USER = "current_user";
     private final String TAG = "MYTAG_WallFragment";
+
+    private AppModel model;
+    private ConnectionController cc;
+    private SharedPreferencesController spc;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

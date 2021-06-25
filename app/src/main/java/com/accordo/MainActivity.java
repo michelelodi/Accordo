@@ -18,16 +18,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
-    private int currentVersionCode;
-
     private final String CURRENT_USER = "current_user";
-    private final String ERROR_TITLE = "Something went wrong";
     private final String PREF_VERSION_CODE_KEY = "version";
-    private final String ERROR_NEGATIVE_BUTTON_TEXT = "OK";
     private final int DOESNT_EXIST = -1;
     private final String TAG = "MYTAG_MainActivity";
+
+    private int currentVersionCode;
     private ConnectionController cc;
-    private String myUid;
     private static Context context;
     private SharedPreferencesController spc;
 

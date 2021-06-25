@@ -14,6 +14,7 @@ public class ChannelViewHolder extends RecyclerView.ViewHolder {
 
     private TextView cTitle, creator;
     private OnListClickListener mListClickListener;
+
     public ChannelViewHolder(@NonNull @NotNull View itemView, OnListClickListener listClickListener) {
         super(itemView);
         cTitle = itemView.findViewById(R.id.cTitle);

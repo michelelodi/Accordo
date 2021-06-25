@@ -9,11 +9,11 @@ import java.util.List;
 
 public class AppModel {
 
+    private final String TAG = "MYTAG_AppModel";
+
     private static AppModel instance;
     private List<Channel> channels;
     private HashMap<String, ArrayList<Post>> posts;
-
-    private final String TAG = "MYTAG_AppModel";
 
     public AppModel(){
         channels = new ArrayList<>();

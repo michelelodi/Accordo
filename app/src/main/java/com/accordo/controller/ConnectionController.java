@@ -13,11 +13,11 @@ import org.json.JSONObject;
 
 public class ConnectionController {
 
-    private final RequestQueue requestQueue;
     private final String PID = "pid";
-    private final String UID = "uid";
     private final String SID = "sid";
     private final String CTITLE = "ctitle";
+
+    private final RequestQueue requestQueue;
 
 
     public ConnectionController(Context context) { this.requestQueue = Volley.newRequestQueue(context); }

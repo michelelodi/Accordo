@@ -3,6 +3,7 @@ package com.accordo.data;
 import java.util.Base64;
 
 public class User {
+
     private String name, pversion, uid;
     private Base64 picture;
 

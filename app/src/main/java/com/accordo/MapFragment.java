@@ -1,8 +1,6 @@
 package com.accordo;
 
-import android.Manifest;
 import android.app.Activity;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,14 +27,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-
-import static com.mapbox.mapboxsdk.Mapbox.getApplicationContext;
 
 public class MapFragment extends Fragment implements
         OnMapReadyCallback {
@@ -45,7 +38,6 @@ public class MapFragment extends Fragment implements
     private static final String LON = "lon";
     private final String TAG = "MYTAG_MapFragment";
     private static final String LOCATION_POST_ICON = "embassy-15";
-    private static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
 
     private SymbolManager symbolManager;
     private Symbol symbol;
@@ -53,9 +45,8 @@ public class MapFragment extends Fragment implements
     private MapboxMap mMapboxMap;
     private FusedLocationProviderClient fusedLocationClient;
     private Activity mainActivity;
-
-    Double mLat;
-    Double mLon;
+    private Double mLat;
+    private Double mLon;
 
     public MapFragment() {}
 
@@ -68,7 +59,7 @@ public class MapFragment extends Fragment implements
         fragment.setArguments(args);
         return fragment;
     }
-
+/*
     private ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) {
@@ -77,6 +68,8 @@ public class MapFragment extends Fragment implements
                     //TODO premission still not granted
                 }
             });
+
+ */
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -87,11 +80,14 @@ public class MapFragment extends Fragment implements
             mLat = Double.parseDouble(getArguments().getString(LAT));
             mLon = Double.parseDouble(getArguments().getString(LON));
         }
+/*
         if (ContextCompat.checkSelfPermission(getApplicationContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
         }
+        */
+
     }
 
     @Override
@@ -113,16 +109,13 @@ public class MapFragment extends Fragment implements
     @Override
     public void onMapReady(@NonNull final MapboxMap mapboxMap) {
         mMapboxMap = mapboxMap;
-
         List<Feature> symbolLayerIconFeatureList = new ArrayList<>();
         symbolLayerIconFeatureList.add(Feature.fromGeometry(
                 Point.fromLngLat(mLon, mLat)));
-
         mapboxMap.easeCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition.Builder()
                 .target(new LatLng(mLat, mLon))
                 .zoom(10)
                 .build()));
-
         mapboxMap.setStyle(Style.LIGHT
                 , style -> {
                     symbolManager = new SymbolManager(mapView, mapboxMap, style);

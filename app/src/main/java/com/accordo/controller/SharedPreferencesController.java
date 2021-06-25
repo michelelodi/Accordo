@@ -7,11 +7,11 @@ import com.accordo.MainActivity;
 
 public class SharedPreferencesController {
 
+    private final String APP_PREFS = "accordo_prefs";
+
     private static SharedPreferencesController instance = null;
     private final SharedPreferences prefs;
     private final SharedPreferences.Editor editor;
-
-    private final String APP_PREFS = "accordo_prefs";
 
     private SharedPreferencesController(Context context) {
         this.prefs = context.getSharedPreferences(APP_PREFS,0);

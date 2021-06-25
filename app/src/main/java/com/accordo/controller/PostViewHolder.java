@@ -15,6 +15,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
 
     private TextView name, content;
     private OnListClickListener mListClickListener;
+
     public PostViewHolder(@NonNull @NotNull View itemView, OnListClickListener listClickListener) {
         super(itemView);
         content = itemView.findViewById(R.id.content);

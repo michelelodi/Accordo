@@ -79,7 +79,6 @@ public class ChannelFragment extends Fragment {
 
     private void handleListClick(View v, int position){
         Post p = AppModel.getInstance().getPost(mCtitle, position);
-        Log.d(TAG,p.getContent());
         if(p instanceof LocationPost) {
             String[] coords = ((LocationPost) p).getCoords();
             getActivity().getSupportFragmentManager().beginTransaction()
