@@ -93,7 +93,7 @@ public class ChannelFragment extends Fragment {
         try {
             p.setContent(response.get("content").toString());
             model.updatePost(p.getCTitle(),p);
-            adapter.notifyItemChanged(model.getPostPosition(p.getCTitle(),p));
+            //adapter.notifyItemChanged(model.getPostPosition(p.getCTitle(),p));
         } catch (JSONException e) {
             e.printStackTrace();
         }

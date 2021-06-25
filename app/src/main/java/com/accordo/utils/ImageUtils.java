@@ -3,14 +3,11 @@ package com.accordo.utils;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import java.util.Base64;
-
 
 public class ImageUtils {
 
     public static Bitmap base64ToBitmap(String encodedImage) {
-
-        byte[] decodedString = Base64.getDecoder().decode(encodedImage);
+        byte[] decodedString = android.util.Base64.decode(encodedImage, android.util.Base64.DEFAULT);
         return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
     }
 }
