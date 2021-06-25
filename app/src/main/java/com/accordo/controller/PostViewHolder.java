@@ -4,6 +4,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.accordo.R;
+import com.accordo.data.Post;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -22,8 +23,8 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
         mListClickListener = listClickListener;
     }
 
-    public void updateContent(String content, String name) {
-        this.content.setText(content);
-        this.name.setText(name);
+    public void updateContent(Post p) {
+        this.content.setText(p.getContent());
+        this.name.setText(p.getAuthor());
     }
 }

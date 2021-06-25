@@ -7,13 +7,12 @@ import java.util.List;
 public class AppModel {
 
     private static AppModel instance;
-    private List<User> users;
     private List<Channel> channels;
     private HashMap<String, ArrayList<Post>> posts;
+
     private final String TAG = "MYTAG_AppModel";
 
     public AppModel(){
-        users = new ArrayList<>();
         channels = new ArrayList<>();
         posts = new HashMap<>();
     }
@@ -44,6 +43,29 @@ public class AppModel {
 
     public Channel getChannel(int position) { return channels.get(position); }
 
-    public Post getChannelPost(String cTitle, int position) { return posts.get(cTitle).get(position); }
+    public ArrayList<Post> getChannelPosts(String cTitle) { return posts.get(cTitle); }
+
+    public Post getPost(String cTitle, int position) { return posts.get(cTitle).get(position); }
+
+    public Post getPost(String cTitle, String pid) {
+        for(Post p : posts.get(cTitle)) if(p.getPid().equals(pid)) return p;
+        return null;
+    }
+
+    public int getPostPosition(String cTitle, Post p){
+        int pos = -1;
+        for(int i = 0; i < posts.get(cTitle).size()-1; i++)
+            if(posts.get(cTitle).get(i).getPid().equals(p.getPid())) {
+                pos = i;
+            }
+        return pos;
+    }
+
+    public void updatePost(String cTitle, Post p) {
+        for(int i = 0; i < posts.get(cTitle).size()-1; i++)
+            if(posts.get(cTitle).get(i).getPid().equals(p.getPid())) {
+                posts.get(cTitle).set(i, p);
+            }
+    }
 
 }

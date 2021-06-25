@@ -1,13 +1,15 @@
 package com.accordo.data;
 
+import android.graphics.Bitmap;
+
 import java.util.Arrays;
 
 public class LocationPost extends Post{
 
     String[] content;
 
-    public LocationPost(String pid, String author, String cTitle) {
-        super(pid, author, cTitle);
+    public LocationPost(String pid, String author, String cTitle, Bitmap authorProfilePicture) {
+        super(pid, author, cTitle, authorProfilePicture);
     }
 
     @Override

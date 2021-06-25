@@ -31,13 +31,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
     @Override
     public PostViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.single_post,parent,false);
-        return new PostViewHolder(view,mListClickListener);
+        return new PostViewHolder(view, mListClickListener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull PostViewHolder holder, int position) {
-        Post p = AppModel.getInstance().getChannelPost(cTitle, position);
-        holder.updateContent(p.getContent(),p.getAuthor());
+        Post p = AppModel.getInstance().getPost(cTitle, position);
+        holder.updateContent(p);
     }
 
     @Override

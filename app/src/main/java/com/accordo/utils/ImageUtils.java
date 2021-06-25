@@ -8,9 +8,9 @@ import java.util.Base64;
 
 public class ImageUtils {
 
-    public static Bitmap base64ToBitmap(Base64 encodedImage) {
+    public static Bitmap base64ToBitmap(String encodedImage) {
 
-        byte[] decodedString = Base64.getDecoder().decode(String.valueOf(encodedImage));
+        byte[] decodedString = Base64.getDecoder().decode(encodedImage);
         return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
     }
 }

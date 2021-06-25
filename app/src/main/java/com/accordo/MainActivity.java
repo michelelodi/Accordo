@@ -10,7 +10,6 @@ import com.accordo.data.AppModel;
 import com.accordo.data.Channel;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.mapbox.mapboxsdk.Mapbox;
 
 import org.json.JSONException;
 import org.json.JSONObject;

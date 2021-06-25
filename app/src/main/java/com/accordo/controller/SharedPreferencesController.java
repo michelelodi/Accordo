@@ -29,8 +29,6 @@ public class SharedPreferencesController {
 
     public String readStringFromSP(String key, String defaultValue) { return prefs.getString(key, defaultValue); }
 
-    public void removeFromSP(String key) { editor.remove(key).apply(); }
-
     public void writeIntToSP(String key, int value) {
         editor.putInt(key, value).apply();
     }

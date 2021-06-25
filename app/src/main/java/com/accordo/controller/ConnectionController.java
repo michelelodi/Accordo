@@ -8,13 +8,14 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ConnectionController {
 
     private final RequestQueue requestQueue;
+    private final String PID = "pid";
+    private final String UID = "uid";
     private final String SID = "sid";
     private final String CTITLE = "ctitle";
 
@@ -32,6 +33,25 @@ public class ConnectionController {
         }
 
         final String url = "https://ewserver.di.unimi.it/mobicomp/accordo/getChannel.php";
+
+        JsonObjectRequest listRequest = new JsonObjectRequest(
+                Request.Method.POST, url, jsonBody,
+                responseListener, errorListener
+        );
+        requestQueue.add(listRequest);
+    }
+
+    public void getPostImage(String sid, String pid, Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener) {
+
+        final JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put(SID,sid);
+            jsonBody.put(PID,pid);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        final String url = "https://ewserver.di.unimi.it/mobicomp/accordo/getPostImage.php";
 
         JsonObjectRequest listRequest = new JsonObjectRequest(
                 Request.Method.POST, url, jsonBody,

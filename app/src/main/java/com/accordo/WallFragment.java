@@ -30,6 +30,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class WallFragment extends Fragment {
 
     AppModel model;
+    ConnectionController cc;
     SharedPreferencesController spc;
     private final String CURRENT_USER = "current_user";
     private final String TAG = "MYTAG_WallFragment";
@@ -38,6 +39,7 @@ public class WallFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         model = AppModel.getInstance();
+        cc = new ConnectionController(getContext());
         spc = SharedPreferencesController.getInstance();
         return inflater.inflate(R.layout.fragment_wall, container, false);
     }
@@ -57,7 +59,6 @@ public class WallFragment extends Fragment {
         if(model.hasFullChannel(model.getChannel(position).getCTitle()))
             this.openChannelFragment(model.getChannel(position).getCTitle());
         else {
-            ConnectionController cc = new ConnectionController(getContext());
             cc.getChannel(spc.readStringFromSP(CURRENT_USER, ""), model.getChannel(position).getCTitle(),
                     (response) -> getChannelResponse(response, model.getChannel(position).getCTitle()),
                     this::getChannelError);
@@ -65,18 +66,17 @@ public class WallFragment extends Fragment {
     }
 
     private void getChannelResponse(JSONObject response, String cTitle){
-
         try {
             for (int i = 0; i < response.getJSONArray("posts").length(); i++) {
                 JSONObject post = response.getJSONArray("posts").getJSONObject(i);
-                makePostFromResponseAndUpdateModel(post,cTitle);
+                this.addPostToModel(post, cTitle);
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
         Log.d(TAG,"Channel has " + AppModel.getInstance().channelSize(cTitle) + " posts");
-        this.openChannelFragment(cTitle);
+
     }
 
     private void getChannelError(VolleyError error){
@@ -84,24 +84,22 @@ public class WallFragment extends Fragment {
         //TODO handle error
     }
 
-    private void makePostFromResponseAndUpdateModel(JSONObject post, String cTitle){
-        Post p;
+    private void addPostToModel(JSONObject post, String cTitle) {
         try {
             switch (post.get("type").toString()) {
                 case "t": {
-                    p = new TextPost(post.get("pid").toString(), post.get("uid").toString(), cTitle);
+                    Post p = new TextPost(post.get("pid").toString(), post.get("uid").toString(), cTitle, null);
                     p.setContent(post.get("content").toString());
                     model.addPost(p, cTitle);
                     break;
                 }
                 case "i": {
-                    p = new ImagePost(post.get("pid").toString(), post.get("uid").toString(), cTitle);
-                    p.setContent(post.get("content").toString());
+                    final Post p = new ImagePost(post.get("pid").toString(), post.get("uid").toString(), cTitle, null);
                     model.addPost(p, cTitle);
                     break;
                 }
                 case "l": {
-                    p = new LocationPost(post.get("pid").toString(), post.get("uid").toString(), cTitle);
+                    Post p = new LocationPost(post.get("pid").toString(), post.get("uid").toString(), cTitle, null);
                     p.setContent(post.get("lat").toString() + "," + post.get("lon").toString());
                     model.addPost(p, cTitle);
                     break;
@@ -109,11 +107,11 @@ public class WallFragment extends Fragment {
                 default:
                     break;
             }
+            this.openChannelFragment(cTitle);
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
-
     private void openChannelFragment(String cTitle){
         if(AppModel.getInstance().channelSize(cTitle) > -1) {
             getActivity().getSupportFragmentManager().beginTransaction()
