@@ -10,6 +10,8 @@ import com.accordo.controller.ChannelAdapter;
 import com.accordo.controller.ConnectionController;
 import com.accordo.controller.SharedPreferencesController;
 import com.accordo.data.AppModel;
+import com.accordo.data.Post;
+import com.accordo.data.roomDB.AccordoDB;
 import com.android.volley.VolleyError;
 
 import org.json.JSONException;
@@ -21,6 +23,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 public class WallFragment extends Fragment {
 
@@ -30,6 +33,7 @@ public class WallFragment extends Fragment {
     private AppModel model;
     private ConnectionController cc;
     private SharedPreferencesController spc;
+    private AccordoDB db;
 
 
     @Override
@@ -38,6 +42,9 @@ public class WallFragment extends Fragment {
         model = AppModel.getInstance();
         cc = new ConnectionController(getContext());
         spc = SharedPreferencesController.getInstance();
+        db = Room.databaseBuilder(MainActivity.getAppContext(),
+                AccordoDB.class, "accordo_database")
+                .build();
         return inflater.inflate(R.layout.fragment_wall, container, false);
     }
 
@@ -67,6 +74,17 @@ public class WallFragment extends Fragment {
             for (int i = 0; i < response.getJSONArray("posts").length(); i++) {
                 JSONObject post = response.getJSONArray("posts").getJSONObject(i);
                 model.addPost(post, cTitle);
+                AccordoDB.databaseWriteExecutor.execute(()-> {
+                    try {
+                        if(post.get("type").toString().equals("i")) {
+                            Post p = model.getPost(cTitle, post.get("pid").toString());
+                            p.setContent(db.postImageDao().get(p.getPid()));
+                            model.updatePost(cTitle, p);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                });
             }
 
         } catch (JSONException e) {

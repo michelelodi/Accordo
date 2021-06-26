@@ -13,6 +13,8 @@ import com.accordo.data.AppModel;
 import com.accordo.data.ImagePost;
 import com.accordo.data.LocationPost;
 import com.accordo.data.Post;
+import com.accordo.data.roomDB.AccordoDB;
+import com.accordo.data.roomDB.PostImage;
 import com.android.volley.VolleyError;
 
 import org.json.JSONException;
@@ -23,6 +25,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 public class ChannelFragment extends Fragment {
 
@@ -35,6 +38,7 @@ public class ChannelFragment extends Fragment {
     private ConnectionController cc;
     private SharedPreferencesController spc;
     private AppModel model;
+    private AccordoDB db;
 
     public ChannelFragment() {}
 
@@ -52,6 +56,9 @@ public class ChannelFragment extends Fragment {
         cc = new ConnectionController(getContext());
         spc = SharedPreferencesController.getInstance();
         model = AppModel.getInstance();
+        db = Room.databaseBuilder(MainActivity.getAppContext(),
+                AccordoDB.class, "accordo_database")
+                .build();
         if (getArguments() != null) mCtitle = getArguments().getString(CTITLE);
     }
 
@@ -93,7 +100,8 @@ public class ChannelFragment extends Fragment {
         try {
             p.setContent(response.get("content").toString());
             model.updatePost(p.getCTitle(),p);
-            //adapter.notifyItemChanged(model.getPostPosition(p.getCTitle(),p));
+            AccordoDB.databaseWriteExecutor.execute(()-> db.postImageDao().insert(new PostImage(p.getPid(),p.getContent())));
+            adapter.notifyItemChanged(model.getPostPosition(p.getCTitle(),p));
         } catch (JSONException e) {
             e.printStackTrace();
         }
