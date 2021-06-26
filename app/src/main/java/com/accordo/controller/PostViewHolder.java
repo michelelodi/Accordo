@@ -44,7 +44,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
             imageContent.setAdjustViewBounds(true);
             imageContent.setLayoutParams(new ConstraintLayout.LayoutParams(
                     ConstraintLayout.LayoutParams.MATCH_PARENT,
-                    ConstraintLayout.LayoutParams.WRAP_CONTENT));
+                    500));
             imageContent.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
         } else if(p instanceof LocationPost || p instanceof TextPost){
             textContent.setVisibility(View.VISIBLE);

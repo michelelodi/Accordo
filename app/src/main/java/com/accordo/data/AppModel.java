@@ -38,18 +38,19 @@ public class AppModel {
     public void addPost(JSONObject post, String cTitle) {
         Post p = null;
         try {
+            String author = post.get("name").toString().length() > 0 ? post.get("name").toString() : "user"+post.get("uid").toString();
             switch (post.get("type").toString()) {
                 case "t": {
-                    p = new TextPost(post.get("pid").toString(), post.get("uid").toString(), cTitle, null);
+                    p = new TextPost(post.get("pid").toString(), author, cTitle, null);
                     p.setContent(post.get("content").toString());
                     break;
                 }
                 case "i": {
-                    p = new ImagePost(post.get("pid").toString(), post.get("uid").toString(), cTitle, null);
+                    p = new ImagePost(post.get("pid").toString(), author, cTitle, null);
                     break;
                 }
                 case "l": {
-                    p = new LocationPost(post.get("pid").toString(), post.get("uid").toString(), cTitle, null);
+                    p = new LocationPost(post.get("pid").toString(), author, cTitle, null);
                     p.setContent(post.get("lat").toString() + "," + post.get("lon").toString());
                     break;
                 }

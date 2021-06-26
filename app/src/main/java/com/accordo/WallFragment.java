@@ -31,6 +31,7 @@ import androidx.room.Room;
 public class WallFragment extends Fragment {
 
     private final String CURRENT_USER = "current_user";
+    private final String DOESNT_EXIST = "-1";
     private final String TAG = "MYTAG_WallFragment";
 
     private AppModel model;
@@ -70,7 +71,7 @@ public class WallFragment extends Fragment {
         if(model.hasFullChannel(model.getChannel(position).getCTitle()))
             this.openChannelFragment(model.getChannel(position).getCTitle());
         else {
-            cc.getChannel(spc.readStringFromSP(CURRENT_USER, ""), model.getChannel(position).getCTitle(),
+            cc.getChannel(spc.readStringFromSP(CURRENT_USER, DOESNT_EXIST), model.getChannel(position).getCTitle(),
                     (response) -> getChannelResponse(response, model.getChannel(position).getCTitle()),
                     this::getChannelError);
         }
@@ -96,7 +97,6 @@ public class WallFragment extends Fragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Log.d(TAG,"Channel has " + AppModel.getInstance().channelSize(cTitle) + " posts");
         this.openChannelFragment(cTitle);
     }
 

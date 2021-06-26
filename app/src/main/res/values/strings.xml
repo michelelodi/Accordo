@@ -90,6 +90,17 @@
         "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
         "when a user tries to pick up one of cards.\n\n"
     </string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Navbar -->
+    <string name="wall_item">WALL</string>
+    <string name="profile_item">PROFILE</string>
+
+    <!-- ProfileFragment -->
+    <string name="profile_name_placeholder">Name</string>
+    <string name="edit_name_button">EDIT</string>
+
+    <!-- SinglePost -->
+    <string name="single_post_image_description">The image of the post.</string>
+
 </resources>

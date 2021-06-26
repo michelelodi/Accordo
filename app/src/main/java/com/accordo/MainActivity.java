@@ -10,6 +10,7 @@ import com.accordo.data.AppModel;
 import com.accordo.data.Channel;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,20 +28,45 @@ public class MainActivity extends AppCompatActivity {
     private ConnectionController cc;
     private static Context context;
     private SharedPreferencesController spc;
+    private BottomNavigationView myNav;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-        this.context = getApplicationContext();
+        context = getApplicationContext();
         spc = SharedPreferencesController.getInstance();
+        myNav = findViewById(R.id.bottomNavigationView);
 
         firstRunSetUp();
 
         cc.getWall("" + spc.readStringFromSP(CURRENT_USER,"" + DOESNT_EXIST),
                 (Response.Listener<JSONObject>) this::getWallResponse,
                 this::getWallError);
+
+        myNav.setOnNavigationItemSelectedListener( item -> {
+            switch(item.getItemId()) {
+                case R.id.wallItem:
+                    getSupportFragmentManager().beginTransaction()
+                            .setReorderingAllowed(true)
+                            .replace(R.id.fragment_container_view, WallFragment.class, new Bundle())
+                            .addToBackStack(null)
+                            .commit();
+                    break;
+                case R.id.profileItem:
+                    getSupportFragmentManager().beginTransaction()
+                            .setReorderingAllowed(true)
+                            .replace(R.id.fragment_container_view, ProfileFragment.class, new Bundle())
+                            .addToBackStack(null)
+                            .commit();
+                    break;
+                default:
+                    break;
+            }
+
+            return true;
+        });
 
     }
 

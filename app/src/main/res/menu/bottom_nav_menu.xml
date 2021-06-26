@@ -3,6 +3,10 @@
 
     <item
         android:id="@+id/wallItem"
-        android:icon="@mipmap/ic_wallicon"
-        android:title="WALL" />
+        android:icon="@drawable/ic_wallicon_foreground"
+        android:title="@string/wall_item" />
+    <item
+        android:id="@+id/profileItem"
+        android:icon="@drawable/ic_profile_foreground"
+        android:title="@string/profile_item" />
 </menu>
