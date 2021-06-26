@@ -12,7 +12,6 @@ import java.util.List;
 public class AppModel {
 
     private final String TAG = "MYTAG_AppModel";
-    private final String UID = "uid";
     private final String PVERSION = "pversion";
     private final String PICTURE = "img";
 
@@ -72,13 +71,13 @@ public class AppModel {
         }
     }
 
-    public void addProfilePicture(String id, Bitmap img, String pversion) {
+    public void addProfilePicture(String uid, Bitmap img, String pversion) {
         HashMap<String, Object> profilePic = new HashMap<>();
         HashMap<String, HashMap<String,Object>> objectToSave = new HashMap<>();
 
         profilePic.put(PVERSION, pversion);
         profilePic.put(PICTURE, img);
-        objectToSave.put(UID,profilePic);
+        objectToSave.put(uid,profilePic);
     }
 
     public int channelSize(String cTitle) {
@@ -110,7 +109,9 @@ public class AppModel {
         return pos;
     }
 
-    public Bitmap getProfilePicture(String uid) { return (Bitmap) profilePictures.getOrDefault(uid,null).getOrDefault(PICTURE,null); }
+    public Bitmap getProfilePicture(String uid) {
+        return profilePictures.getOrDefault(uid,null) != null ? (Bitmap) profilePictures.getOrDefault(uid,null).getOrDefault(PICTURE,null) : null;
+    }
 
     public void updatePost(String cTitle, Post p) {
         for(int i = 0; i < posts.get(cTitle).size()-1; i++)

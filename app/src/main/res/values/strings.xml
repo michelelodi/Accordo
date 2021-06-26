@@ -98,6 +98,7 @@
 
     <!-- ProfileFragment -->
     <string name="profile_name_placeholder">Name</string>
+    <string name="profile_pic_description">User profile picture.</string>
     <string name="edit_name_button">EDIT</string>
 
     <!-- SinglePost -->

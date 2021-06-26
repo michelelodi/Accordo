@@ -9,9 +9,10 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(entities = {PostImage.class}, version = 1, exportSchema = false)
+@Database(entities = {PostImage.class, ProfilePicture.class}, version = 1, exportSchema = false)
 public abstract class AccordoDB extends RoomDatabase {
     public abstract PostImageDao postImageDao();
+    public abstract  ProfilePictureDao profilePictureDao();
 
     private static volatile AccordoDB INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;
