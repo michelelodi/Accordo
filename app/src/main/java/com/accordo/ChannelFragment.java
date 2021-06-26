@@ -1,6 +1,9 @@
 package com.accordo;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +42,7 @@ public class ChannelFragment extends Fragment {
     private SharedPreferencesController spc;
     private AppModel model;
     private AccordoDB db;
+    private Looper secondaryThreadLooper;
 
     public ChannelFragment() {}
 
@@ -59,6 +63,9 @@ public class ChannelFragment extends Fragment {
         db = Room.databaseBuilder(MainActivity.getAppContext(),
                 AccordoDB.class, "accordo_database")
                 .build();
+        HandlerThread handlerThread = new HandlerThread("MyHandlerThread");
+        handlerThread.start();
+        secondaryThreadLooper = handlerThread.getLooper();
         if (getArguments() != null) mCtitle = getArguments().getString(CTITLE);
     }
 
@@ -100,7 +107,7 @@ public class ChannelFragment extends Fragment {
         try {
             p.setContent(response.get("content").toString());
             model.updatePost(p.getCTitle(),p);
-            AccordoDB.databaseWriteExecutor.execute(()-> db.postImageDao().insert(new PostImage(p.getPid(),p.getContent())));
+            (new Handler(secondaryThreadLooper)).post(() -> AccordoDB.databaseWriteExecutor.execute(()-> db.postImageDao().insert(new PostImage(p.getPid(),p.getContent()))));
             adapter.notifyItemChanged(model.getPostPosition(p.getCTitle(),p));
         } catch (JSONException e) {
             e.printStackTrace();
