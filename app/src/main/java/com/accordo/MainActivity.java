@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private final String PREF_VERSION_CODE_KEY = "version";
     private final int DOESNT_EXIST = -1;
     private final String TAG = "MYTAG_MainActivity";
+    private final String UID = "uid";
 
     private int currentVersionCode;
     private ConnectionController cc;
@@ -45,28 +46,7 @@ public class MainActivity extends AppCompatActivity {
                 (Response.Listener<JSONObject>) this::getWallResponse,
                 this::getWallError);
 
-        myNav.setOnNavigationItemSelectedListener( item -> {
-            switch(item.getItemId()) {
-                case R.id.wallItem:
-                    getSupportFragmentManager().beginTransaction()
-                            .setReorderingAllowed(true)
-                            .replace(R.id.fragment_container_view, WallFragment.class, new Bundle())
-                            .addToBackStack(null)
-                            .commit();
-                    break;
-                case R.id.profileItem:
-                    getSupportFragmentManager().beginTransaction()
-                            .setReorderingAllowed(true)
-                            .replace(R.id.fragment_container_view, ProfileFragment.class, new Bundle())
-                            .addToBackStack(null)
-                            .commit();
-                    break;
-                default:
-                    break;
-            }
-
-            return true;
-        });
+        setupNavbar();
 
     }
 
@@ -89,15 +69,35 @@ public class MainActivity extends AppCompatActivity {
     private void registrationResponse(JSONObject response) {
         try {
 
-            spc.writeStringToSP(CURRENT_USER, "" + response.get("sid"));
+            spc.writeStringToSP(CURRENT_USER, response.get("sid").toString());
 
-            cc.getWall("" + response.get("sid"),
+            cc.getProfile(response.get("sid").toString(), this::getProfileResponse, this::getProfileError);
+
+            cc.getWall(response.get("sid").toString(),
                     (Response.Listener<JSONObject>) this::getWallResponse,
                     this::getWallError);
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    private void registrationError(VolleyError error) {
+        Log.e(TAG, error.toString() + " in registration");
+        currentVersionCode = DOESNT_EXIST;
+    }
+
+    private void getProfileResponse(JSONObject response) {
+        try {
+            spc.writeStringToSP(UID, response.get("uid").toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void getProfileError(VolleyError error) {
+        //TODO handle error
+        Log.e(TAG, error.toString());
     }
 
     private void getWallResponse(JSONObject response){
@@ -121,10 +121,30 @@ public class MainActivity extends AppCompatActivity {
         Log.e(TAG, error.toString() + " in getWall");
     }
 
-    private void registrationError(VolleyError error) {
-        Log.e(TAG, error.toString() + " in registration");
-        currentVersionCode = DOESNT_EXIST;
-    }
-
     public static synchronized Context getAppContext() { return context; }
+
+    private void setupNavbar() {
+        myNav.setOnNavigationItemSelectedListener( item -> {
+            switch(item.getItemId()) {
+                case R.id.wallItem:
+                    getSupportFragmentManager().beginTransaction()
+                            .setReorderingAllowed(true)
+                            .replace(R.id.fragment_container_view, WallFragment.class, new Bundle())
+                            .addToBackStack(null)
+                            .commit();
+                    break;
+                case R.id.profileItem:
+                    getSupportFragmentManager().beginTransaction()
+                            .setReorderingAllowed(true)
+                            .replace(R.id.fragment_container_view, ProfileFragment.class, new Bundle())
+                            .addToBackStack(null)
+                            .commit();
+                    break;
+                default:
+                    break;
+            }
+
+            return true;
+        });
+    }
 }

@@ -1,5 +1,7 @@
 package com.accordo.data;
 
+import android.graphics.Bitmap;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -10,14 +12,19 @@ import java.util.List;
 public class AppModel {
 
     private final String TAG = "MYTAG_AppModel";
+    private final String UID = "uid";
+    private final String PVERSION = "pversion";
+    private final String PICTURE = "img";
 
     private static AppModel instance;
     private List<Channel> channels;
     private HashMap<String, ArrayList<Post>> posts;
+    private HashMap<String, HashMap<String,Object>> profilePictures;
 
     public AppModel(){
         channels = new ArrayList<>();
         posts = new HashMap<>();
+        profilePictures = new HashMap<>();
     }
 
     public static synchronized AppModel getInstance() {
@@ -65,6 +72,15 @@ public class AppModel {
         }
     }
 
+    public void addProfilePicture(String id, Bitmap img, String pversion) {
+        HashMap<String, Object> profilePic = new HashMap<>();
+        HashMap<String, HashMap<String,Object>> objectToSave = new HashMap<>();
+
+        profilePic.put(PVERSION, pversion);
+        profilePic.put(PICTURE, img);
+        objectToSave.put(UID,profilePic);
+    }
+
     public int channelSize(String cTitle) {
         if(posts.get(cTitle) != null) return posts.get(cTitle).size();
         else return -1;
@@ -93,6 +109,8 @@ public class AppModel {
             }
         return pos;
     }
+
+    public Bitmap getProfilePicture(String uid) { return (Bitmap) profilePictures.getOrDefault(uid,null).getOrDefault(PICTURE,null); }
 
     public void updatePost(String cTitle, Post p) {
         for(int i = 0; i < posts.get(cTitle).size()-1; i++)

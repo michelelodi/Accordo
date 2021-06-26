@@ -20,7 +20,6 @@ public class ConnectionController {
 
     private final RequestQueue requestQueue;
 
-
     public ConnectionController(Context context) { this.requestQueue = Volley.newRequestQueue(context); }
 
     public void getChannel(String sid, String cTitle, Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener) {
