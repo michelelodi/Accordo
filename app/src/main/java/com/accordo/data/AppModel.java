@@ -73,11 +73,9 @@ public class AppModel {
 
     public void addProfilePicture(String uid, Bitmap img, String pversion) {
         HashMap<String, Object> profilePic = new HashMap<>();
-        HashMap<String, HashMap<String,Object>> objectToSave = new HashMap<>();
-
         profilePic.put(PVERSION, pversion);
         profilePic.put(PICTURE, img);
-        objectToSave.put(uid,profilePic);
+        profilePictures.put(uid,profilePic);
     }
 
     public int channelSize(String cTitle) {
@@ -88,6 +86,8 @@ public class AppModel {
     public int channelsSize() {return channels.size();}
 
     public boolean hasFullChannel(String cTitle) { return posts.containsKey(cTitle); }
+
+    public boolean hasProfilePic(String uid) { return profilePictures.containsKey(uid); }
 
     public Channel getChannel(int position) { return channels.get(position); }
 
@@ -111,6 +111,10 @@ public class AppModel {
 
     public Bitmap getProfilePicture(String uid) {
         return profilePictures.getOrDefault(uid,null) != null ? (Bitmap) profilePictures.getOrDefault(uid,null).getOrDefault(PICTURE,null) : null;
+    }
+
+    public int getProfilePictureVersion(String uid) {
+        return profilePictures.getOrDefault(uid,null) != null ?  Integer.parseInt(profilePictures.getOrDefault(uid,null).getOrDefault(PVERSION,null).toString()) : -1;
     }
 
     public void updatePost(String cTitle, Post p) {
