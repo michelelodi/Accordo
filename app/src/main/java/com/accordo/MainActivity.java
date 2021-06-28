@@ -17,6 +17,8 @@ import org.json.JSONObject;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import static com.google.android.material.bottomnavigation.LabelVisibilityMode.LABEL_VISIBILITY_SELECTED;
+
 public class MainActivity extends AppCompatActivity {
 
     private final String CURRENT_USER = "current_user";
@@ -124,12 +126,21 @@ public class MainActivity extends AppCompatActivity {
     public static synchronized Context getAppContext() { return context; }
 
     private void setupNavbar() {
+        myNav.setLabelVisibilityMode(LABEL_VISIBILITY_SELECTED);
+        myNav.setItemIconSize(100);
         myNav.setOnNavigationItemSelectedListener( item -> {
             switch(item.getItemId()) {
                 case R.id.wallItem:
                     getSupportFragmentManager().beginTransaction()
                             .setReorderingAllowed(true)
                             .replace(R.id.fragment_container_view, WallFragment.class, new Bundle())
+                            .addToBackStack(null)
+                            .commit();
+                    break;
+                case R.id.addChannelItem:
+                    getSupportFragmentManager().beginTransaction()
+                            .setReorderingAllowed(true)
+                            .replace(R.id.fragment_container_view, AddChannelFragment.class, new Bundle())
                             .addToBackStack(null)
                             .commit();
                     break;

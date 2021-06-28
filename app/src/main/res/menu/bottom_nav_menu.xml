@@ -2,11 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+
         android:id="@+id/wallItem"
         android:icon="@drawable/ic_wallicon_foreground"
         android:title="@string/wall_item" />
     <item
+        android:id="@+id/addChannelItem"
+        android:icon="@drawable/ic_add_channel_foreground"
+        android:title="@string/addChannel_item"
+        android:titleCondensed="ADD"
+        android:tooltipText="Create a new channel" />
+    <item
         android:id="@+id/profileItem"
         android:icon="@drawable/ic_profile_foreground"
-        android:title="@string/profile_item" />
+        android:title="@string/profile_item"
+        android:tooltipText="Profile settings" />
 </menu>

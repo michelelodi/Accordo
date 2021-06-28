@@ -23,6 +23,25 @@ public class ConnectionController {
 
     public ConnectionController(Context context) { this.requestQueue = Volley.newRequestQueue(context); }
 
+    public void addChannel(String sid, String cTitle, Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener) {
+
+        final JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put(SID,sid);
+            jsonBody.put(CTITLE,cTitle);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        final String url = "https://ewserver.di.unimi.it/mobicomp/accordo/addChannel.php";
+
+        JsonObjectRequest listRequest = new JsonObjectRequest(
+                Request.Method.POST, url, jsonBody,
+                responseListener, errorListener
+        );
+        requestQueue.add(listRequest);
+    }
+
     public void getChannel(String sid, String cTitle, Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener) {
 
         final JSONObject jsonBody = new JSONObject();

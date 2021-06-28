@@ -82,17 +82,18 @@ public class WallFragment extends Fragment {
             for (int i = 0; i < response.getJSONArray("posts").length(); i++) {
                 JSONObject post = response.getJSONArray("posts").getJSONObject(i);
                 model.addPost(post, cTitle);
-                (new Handler(secondaryThreadLooper)).post(() -> AccordoDB.databaseWriteExecutor.execute(()-> {
+                if(post.get("type").toString().equals("i")) {
+                    (new Handler(secondaryThreadLooper)).post(() -> AccordoDB.databaseWriteExecutor.execute(() -> {
+                        Post p = null;
                         try {
-                            if(post.get("type").toString().equals("i")) {
-                                Post p = model.getPost(cTitle, post.get("pid").toString());
-                                p.setContent(db.postImageDao().get(p.getPid()));
-                                model.updatePost(cTitle, p);
-                            }
+                            p = model.getPost(cTitle, post.get("pid").toString());
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                }));
+                        p.setContent(db.postImageDao().get(p.getPid()));
+                        model.updatePost(cTitle, p);
+                    }));
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();

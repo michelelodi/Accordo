@@ -94,6 +94,7 @@
 
     <!-- Navbar -->
     <string name="wall_item">WALL</string>
+    <string name="addChannel_item">ADD CHANNEL</string>
     <string name="profile_item">PROFILE</string>
 
     <!-- ProfileFragment -->
