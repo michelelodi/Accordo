@@ -50,7 +50,7 @@ public class WallFragment extends Fragment {
         db = Room.databaseBuilder(MainActivity.getAppContext(),
                 AccordoDB.class, "accordo_database")
                 .build();
-        HandlerThread handlerThread = new HandlerThread("MyHandlerThread");
+        HandlerThread handlerThread = new HandlerThread("MyHandlerThreadWall");
         handlerThread.start();
         secondaryThreadLooper = handlerThread.getLooper();
         return inflater.inflate(R.layout.fragment_wall, container, false);

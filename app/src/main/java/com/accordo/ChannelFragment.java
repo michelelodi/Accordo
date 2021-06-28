@@ -63,7 +63,7 @@ public class ChannelFragment extends Fragment {
         db = Room.databaseBuilder(MainActivity.getAppContext(),
                 AccordoDB.class, "accordo_database")
                 .build();
-        HandlerThread handlerThread = new HandlerThread("MyHandlerThread");
+        HandlerThread handlerThread = new HandlerThread("MyHandlerThreadChannel");
         handlerThread.start();
         secondaryThreadLooper = handlerThread.getLooper();
         if (getArguments() != null) mCtitle = getArguments().getString(CTITLE);

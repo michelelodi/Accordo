@@ -14,5 +14,5 @@ public interface ProfilePictureDao {
     String getPicture(String uid);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(ProfilePicture profilePicture);
+    void insertPicture(ProfilePicture profilePicture);
 }

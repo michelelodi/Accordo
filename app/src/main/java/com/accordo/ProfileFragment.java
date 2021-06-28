@@ -3,6 +3,9 @@ package com.accordo;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +20,7 @@ import com.accordo.controller.ConnectionController;
 import com.accordo.controller.SharedPreferencesController;
 import com.accordo.data.AppModel;
 import com.accordo.data.roomDB.AccordoDB;
+import com.accordo.data.roomDB.ProfilePicture;
 import com.accordo.utils.ImageUtils;
 import com.android.volley.VolleyError;
 
@@ -49,6 +53,7 @@ public class ProfileFragment extends Fragment {
     private ImageView profilePic;
     private AccordoDB db;
     private AppModel model;
+    private Looper secondaryThreadLooper;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,6 +64,9 @@ public class ProfileFragment extends Fragment {
         db = Room.databaseBuilder(MainActivity.getAppContext(),
                 AccordoDB.class, "accordo_database")
                 .build();
+        HandlerThread handlerThread = new HandlerThread("MyHandlerThreadProfile");
+        handlerThread.start();
+        secondaryThreadLooper = handlerThread.getLooper();
         return inflater.inflate(R.layout.fragment_profile, container, false);
     }
 
@@ -94,13 +102,12 @@ public class ProfileFragment extends Fragment {
             try {
                 Bitmap bm = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), data.getData());
                 profilePic.setImageBitmap(bm);
-                if(model.hasProfilePic(spc.readStringFromSP(UID,DOESNT_EXIST))){
-                    int pversion = model.getProfilePictureVersion(spc.readStringFromSP(UID,DOESNT_EXIST)) + 1;
-                    Log.d(TAG,pversion+"");
-                    model.addProfilePicture(spc.readStringFromSP(UID, DOESNT_EXIST), bm, Integer.toString(pversion));
-                }else {
-                    model.addProfilePicture(spc.readStringFromSP(UID, DOESNT_EXIST), bm, "1");
-                }
+                int pversion = model.hasProfilePic(spc.readStringFromSP(UID,DOESNT_EXIST)) ? model.getProfilePictureVersion(spc.readStringFromSP(UID,DOESNT_EXIST)) + 1 : 1;
+                model.addProfilePicture(spc.readStringFromSP(UID, DOESNT_EXIST), bm, Integer.toString(pversion));
+                (new Handler(secondaryThreadLooper)).post(() -> AccordoDB.databaseWriteExecutor.execute(()-> {
+                    ProfilePicture newPic = new ProfilePicture(spc.readStringFromSP(UID,DOESNT_EXIST),Integer.toString(pversion),ImageUtils.bitmapToBase64(bm));
+                    db.profilePictureDao().insertPicture(newPic);
+                }));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -121,7 +128,7 @@ public class ProfileFragment extends Fragment {
             profilePic.setImageBitmap(model.getProfilePicture(spc.readStringFromSP(UID, null)));
         }
         else{
-            AccordoDB.databaseWriteExecutor.execute(()-> {
+            (new Handler(secondaryThreadLooper)).post(() -> AccordoDB.databaseWriteExecutor.execute(()-> {
                 if(db.profilePictureDao().getPicture(spc.readStringFromSP(UID,null)) != null) {
                     getActivity().runOnUiThread(() -> profilePic.setImageBitmap(ImageUtils.base64ToBitmap(db.profilePictureDao().getPicture(spc.readStringFromSP(UID,null)))));
                     model.addProfilePicture(spc.readStringFromSP(UID,null),
@@ -129,7 +136,7 @@ public class ProfileFragment extends Fragment {
                             db.profilePictureDao().getPicture(spc.readStringFromSP(UID,null)));
                 }
                 else getActivity().runOnUiThread(() -> profilePic.setImageResource(R.drawable.missing_profile));
-            });
+            }));
         }
     }
 
