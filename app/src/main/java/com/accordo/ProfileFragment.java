@@ -40,11 +40,13 @@ public class ProfileFragment extends Fragment {
 
     private final String CURRENT_USER = "current_user";
     private final String SUCCESS = "Name successfully updated";
-    private final String FAIL = "An error occurred. Please check your Internet Connection";
+    private final String CONNECTION_FAIL = "An error occurred. Please check your Internet Connection";
     private final String DOESNT_EXIST = "-1";
     private final String UID = "uid";
     private final String TAG = "MYTAG_ProfileFragment";
     private final int RESULT_LOAD_IMAGE = 1;
+    private final String CLIENT_ERROR = "com.android.volley.ClientError";
+    private final String CLIENT_FAIL = "This name is already taken. Please try with a different one.";
 
     private SharedPreferencesController spc;
     private EditText profileName;
@@ -78,48 +80,18 @@ public class ProfileFragment extends Fragment {
         editPicture = view.findViewById(R.id.editPicture);
         profilePic = view.findViewById(R.id.profilePicture);
 
-        profileDataSetUp();
-
-        editName.setOnClickListener( v -> {
-            if(editProfileNameCheck())
-                cc.setProfile(spc.readStringFromSP(CURRENT_USER, DOESNT_EXIST), profileName.getText().toString(),
-                        response -> setProfileResponse(response,profileName.getText().toString()), this::setProfileError);
-        });
-
-        editPicture.setOnClickListener( v -> {
-            Intent i = new Intent(
-                    Intent.ACTION_PICK,
-                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            startActivityForResult(i, RESULT_LOAD_IMAGE);
-        });
+        fillViewsWithProfileData();
+        setUpOnClickListeners();
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null) {
-            try {
-                Bitmap bm = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), data.getData());
-                profilePic.setImageBitmap(bm);
-                int pversion = model.hasProfilePic(spc.readStringFromSP(UID,DOESNT_EXIST)) ? model.getProfilePictureVersion(spc.readStringFromSP(UID,DOESNT_EXIST)) + 1 : 1;
-                model.addProfilePicture(spc.readStringFromSP(UID, DOESNT_EXIST), bm, Integer.toString(pversion));
-                (new Handler(secondaryThreadLooper)).post(() -> AccordoDB.databaseWriteExecutor.execute(()-> {
-                    ProfilePicture newPic = new ProfilePicture(spc.readStringFromSP(UID,DOESNT_EXIST),Integer.toString(pversion),ImageUtils.bitmapToBase64(bm));
-                    db.profilePictureDao().insertPicture(newPic);
-                }));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
     private boolean editProfileNameCheck(){
         String name = profileName.getText().toString();
-        return name.length() > 0 && name.length() < 21 && !name.equals("Name") && !name.equals(spc.readStringFromSP(spc.readStringFromSP(CURRENT_USER, DOESNT_EXIST), DOESNT_EXIST));
+        return name.length() > 0 && name.length() < 21 && !name.equals("Name") && !name.equals(spc.readStringFromSP(spc.readStringFromSP(CURRENT_USER, DOESNT_EXIST), DOESNT_EXIST)) ;
     }
 
-    private void profileDataSetUp() {
+    private void fillViewsWithProfileData() {
         if(!spc.readStringFromSP(spc.readStringFromSP(CURRENT_USER, DOESNT_EXIST), DOESNT_EXIST).equals("-1")) {
             profileName.setText(spc.readStringFromSP(spc.readStringFromSP(CURRENT_USER, DOESNT_EXIST), DOESNT_EXIST));
         }
@@ -130,24 +102,72 @@ public class ProfileFragment extends Fragment {
         else{
             (new Handler(secondaryThreadLooper)).post(() -> AccordoDB.databaseWriteExecutor.execute(()-> {
                 if(db.profilePictureDao().getPicture(spc.readStringFromSP(UID,null)) != null) {
-                    getActivity().runOnUiThread(() -> profilePic.setImageBitmap(ImageUtils.base64ToBitmap(db.profilePictureDao().getPicture(spc.readStringFromSP(UID,null)))));
+                    Bitmap bm = ImageUtils.base64ToBitmap(db.profilePictureDao().getPicture(spc.readStringFromSP(UID,null)));
+                    getActivity().runOnUiThread(() -> profilePic.setImageBitmap(bm));
                     model.addProfilePicture(spc.readStringFromSP(UID,null),
-                            ImageUtils.base64ToBitmap(db.profilePictureDao().getPicture(spc.readStringFromSP(UID,null))),
-                            db.profilePictureDao().getPicture(spc.readStringFromSP(UID,null)));
+                            bm,
+                            db.profilePictureDao().getVersion(spc.readStringFromSP(UID,null)));
                 }
                 else getActivity().runOnUiThread(() -> profilePic.setImageResource(R.drawable.missing_profile));
             }));
         }
     }
 
-    private void setProfileResponse(JSONObject response, String name) {
+    private void setProfileNameResponse(JSONObject response, String name) {
         profileName.setText(name);
         Toast.makeText(getContext(), SUCCESS, Toast.LENGTH_SHORT).show();
         spc.writeStringToSP(spc.readStringFromSP(CURRENT_USER, DOESNT_EXIST),name);
     }
 
-    private void setProfileError(VolleyError error) {
-        Toast.makeText(getContext(), FAIL, Toast.LENGTH_SHORT).show();
+    private void setProfileNameError(VolleyError error) {
+        if(error.toString().equals(CLIENT_ERROR))
+            Toast.makeText(getContext(), CLIENT_FAIL, Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(getContext(), CONNECTION_FAIL, Toast.LENGTH_SHORT).show();
         Log.e(TAG, error.toString());
+    }
+
+    private void setProfilePictureResponse(JSONObject response, Bitmap bm) {
+        profilePic.setImageBitmap(bm);
+        int pversion = model.hasProfilePic(spc.readStringFromSP(UID,DOESNT_EXIST)) ? model.getProfilePictureVersion(spc.readStringFromSP(UID,DOESNT_EXIST)) + 1 : 1;
+        model.addProfilePicture(spc.readStringFromSP(UID, DOESNT_EXIST), bm, Integer.toString(pversion));
+        (new Handler(secondaryThreadLooper)).post(() -> AccordoDB.databaseWriteExecutor.execute(()-> {
+            ProfilePicture newPic = new ProfilePicture(spc.readStringFromSP(UID,DOESNT_EXIST),Integer.toString(pversion),ImageUtils.bitmapToBase64(bm));
+            db.profilePictureDao().insertPicture(newPic);
+        }));
+    }
+
+    private void setProfilePictureError(VolleyError error) {
+        //TODO
+        Log.e(TAG,error.toString());
+    }
+
+    private void setUpOnClickListeners(){
+        editName.setOnClickListener( v -> {
+            if(editProfileNameCheck())
+                cc.setProfileName(spc.readStringFromSP(CURRENT_USER, DOESNT_EXIST), profileName.getText().toString(),
+                        response -> setProfileNameResponse(response,profileName.getText().toString()), this::setProfileNameError);
+        });
+
+        editPicture.setOnClickListener( v -> {
+            startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI),
+                    RESULT_LOAD_IMAGE);
+        });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null) {
+            try {
+                Bitmap bm = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), data.getData());
+                cc.setProfilePicture(spc.readStringFromSP(CURRENT_USER, DOESNT_EXIST),ImageUtils.bitmapToBase64(bm),
+                        response -> setProfilePictureResponse(response, bm),
+                        this::setProfilePictureError);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

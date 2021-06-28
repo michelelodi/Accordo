@@ -17,6 +17,7 @@ public class ConnectionController {
     private final String SID = "sid";
     private final String CTITLE = "ctitle";
     private final String NAME = "name";
+    private final String PICTURE = "picture";
 
     private final RequestQueue requestQueue;
 
@@ -107,12 +108,31 @@ public class ConnectionController {
         requestQueue.add(listRequest);
     }
 
-    public void setProfile(String sid, String name, Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener) {
+    public void setProfileName(String sid, String name, Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener) {
 
         final JSONObject jsonBody = new JSONObject();
         try {
             jsonBody.put(SID,sid);
             jsonBody.put(NAME,name);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        final String url = "https://ewserver.di.unimi.it/mobicomp/accordo/setProfile.php";
+
+        JsonObjectRequest listRequest = new JsonObjectRequest(
+                Request.Method.POST, url, jsonBody,
+                responseListener, errorListener
+        );
+        requestQueue.add(listRequest);
+    }
+
+    public void setProfilePicture(String sid, String picture, Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener) {
+
+        final JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put(SID,sid);
+            jsonBody.put(PICTURE,picture);
         } catch (JSONException e) {
             e.printStackTrace();
         }
