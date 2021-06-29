@@ -105,4 +105,8 @@
     <!-- SinglePost -->
     <string name="single_post_image_description">The image of the post.</string>
 
+    <!-- AddChannelFragment -->
+    <string name="ctitle_placeholder">Channel title</string>
+    <string name="ctitle_button">CREATE CHANNEL</string>
+
 </resources>

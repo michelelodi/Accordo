@@ -8,7 +8,6 @@ import com.accordo.controller.ConnectionController;
 import com.accordo.controller.SharedPreferencesController;
 import com.accordo.data.AppModel;
 import com.accordo.data.Channel;
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -43,10 +42,10 @@ public class MainActivity extends AppCompatActivity {
         myNav = findViewById(R.id.bottomNavigationView);
 
         firstRunSetUp();
-
+        /*
         cc.getWall("" + spc.readStringFromSP(CURRENT_USER,"" + DOESNT_EXIST),
-                (Response.Listener<JSONObject>) this::getWallResponse,
-                this::getWallError);
+                this::getWallResponse,
+                this::getWallError);*/
 
         setupNavbar();
 
@@ -60,12 +59,16 @@ public class MainActivity extends AppCompatActivity {
         int savedVersionCode = spc.readIntFromSP(PREF_VERSION_CODE_KEY, DOESNT_EXIST);
 
         if (savedVersionCode == DOESNT_EXIST) {
+            spc.writeIntToSP(PREF_VERSION_CODE_KEY, currentVersionCode);
             cc.register(this::registrationResponse,
                     this::registrationError);
+        }else if(savedVersionCode == currentVersionCode){
+            spc.writeIntToSP(PREF_VERSION_CODE_KEY, currentVersionCode);
+            getSupportFragmentManager().beginTransaction()
+                    .setReorderingAllowed(true)
+                    .add(R.id.fragment_container_view, WallFragment.class, new Bundle())
+                    .commit();
         }
-
-        spc.writeIntToSP(PREF_VERSION_CODE_KEY, currentVersionCode);
-
     }
 
     private void registrationResponse(JSONObject response) {
@@ -74,10 +77,6 @@ public class MainActivity extends AppCompatActivity {
             spc.writeStringToSP(CURRENT_USER, response.get("sid").toString());
 
             cc.getProfile(response.get("sid").toString(), this::getProfileResponse, this::getProfileError);
-
-            cc.getWall(response.get("sid").toString(),
-                    (Response.Listener<JSONObject>) this::getWallResponse,
-                    this::getWallError);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -92,6 +91,15 @@ public class MainActivity extends AppCompatActivity {
     private void getProfileResponse(JSONObject response) {
         try {
             spc.writeStringToSP(UID, response.get("uid").toString());
+            /*
+            cc.getWall(response.get("sid").toString(),
+                    this::getWallResponse,
+                    this::getWallError);
+             */
+            getSupportFragmentManager().beginTransaction()
+                    .setReorderingAllowed(true)
+                    .add(R.id.fragment_container_view, WallFragment.class, new Bundle())
+                    .commit();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -157,5 +165,6 @@ public class MainActivity extends AppCompatActivity {
 
             return true;
         });
+
     }
 }

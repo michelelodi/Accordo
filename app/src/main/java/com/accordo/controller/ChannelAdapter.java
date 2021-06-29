@@ -35,7 +35,7 @@ public class ChannelAdapter extends RecyclerView.Adapter<ChannelViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull @NotNull ChannelViewHolder holder, int position) {
         Channel ch = AppModel.getInstance().getChannel(position);
-        holder.updateContent(ch.getCTitle(),"" + ch.isMine());
+        holder.updateContent(ch.getCTitle(), Boolean.toString(ch.isMine()));
     }
 
     @Override

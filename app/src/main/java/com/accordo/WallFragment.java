@@ -13,6 +13,7 @@ import com.accordo.controller.ChannelAdapter;
 import com.accordo.controller.ConnectionController;
 import com.accordo.controller.SharedPreferencesController;
 import com.accordo.data.AppModel;
+import com.accordo.data.Channel;
 import com.accordo.data.Post;
 import com.accordo.data.roomDB.AccordoDB;
 import com.android.volley.VolleyError;
@@ -39,7 +40,14 @@ public class WallFragment extends Fragment {
     private SharedPreferencesController spc;
     private AccordoDB db;
     private Looper secondaryThreadLooper;
+    ChannelAdapter adapter;
 
+    @Override
+    public void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,9 +69,12 @@ public class WallFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         RecyclerView rv = view.findViewById(R.id.wallRecyclerView);
-        ChannelAdapter adapter = new ChannelAdapter(getContext(), this::handleListClick);
+        adapter = new ChannelAdapter(getContext(), this::handleListClick);
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
         rv.setAdapter(adapter);
+        cc.getWall(spc.readStringFromSP(CURRENT_USER,"" + DOESNT_EXIST),
+                this::getWallResponse,
+                this::getWallError);
     }
 
     private void handleListClick(View v, int position) {
@@ -75,6 +86,24 @@ public class WallFragment extends Fragment {
                     (response) -> getChannelResponse(response, model.getChannel(position).getCTitle()),
                     this::getChannelError);
         }
+    }
+
+    private void getWallResponse(JSONObject response) {
+        model.emptyWall();
+        try {
+            for (int i = 0; i < response.getJSONArray("channels").length(); i++) {
+                model.addChannel((new Channel(response.getJSONArray("channels").getJSONObject(i).get("ctitle").toString(),
+                        response.getJSONArray("channels").getJSONObject(i).get("mine").toString().equals("t"))));
+            }
+            adapter.notifyDataSetChanged();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void getWallError(VolleyError error) {
+        //TODO handle error
+        Log.e(TAG, error.toString());
     }
 
     private void getChannelResponse(JSONObject response, String cTitle){

@@ -85,6 +85,10 @@ public class AppModel {
 
     public int channelsSize() {return channels.size();}
 
+    public void emptyWall() {
+        channels.clear();
+    }
+
     public boolean hasFullChannel(String cTitle) { return posts.containsKey(cTitle); }
 
     public boolean hasProfilePic(String uid) { return profilePictures.containsKey(uid); }
