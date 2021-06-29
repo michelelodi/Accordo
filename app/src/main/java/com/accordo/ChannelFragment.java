@@ -58,9 +58,9 @@ public class ChannelFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         cc = new ConnectionController(getContext());
-        spc = SharedPreferencesController.getInstance();
+        spc = SharedPreferencesController.getInstance(getContext());
         model = AppModel.getInstance();
-        db = Room.databaseBuilder(MainActivity.getAppContext(),
+        db = Room.databaseBuilder(getContext(),
                 AccordoDB.class, "accordo_database")
                 .build();
         HandlerThread handlerThread = new HandlerThread("MyHandlerThreadChannel");

@@ -60,10 +60,10 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        spc = SharedPreferencesController.getInstance();
+        spc = SharedPreferencesController.getInstance(getContext());
         cc = new ConnectionController(getContext());
         model = AppModel.getInstance();
-        db = Room.databaseBuilder(MainActivity.getAppContext(),
+        db = Room.databaseBuilder(getContext(),
                 AccordoDB.class, "accordo_database")
                 .build();
         HandlerThread handlerThread = new HandlerThread("MyHandlerThreadProfile");

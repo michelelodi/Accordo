@@ -3,8 +3,6 @@ package com.accordo.controller;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.accordo.MainActivity;
-
 public class SharedPreferencesController {
 
     private final String APP_PREFS = "accordo_prefs";
@@ -18,9 +16,9 @@ public class SharedPreferencesController {
         this.editor = prefs.edit();
     }
 
-    public static synchronized SharedPreferencesController getInstance() {
+    public static synchronized SharedPreferencesController getInstance(Context context) {
         if (instance == null) {
-            instance = new SharedPreferencesController(MainActivity.getAppContext());
+            instance = new SharedPreferencesController(context);
         }
         return instance;
     }

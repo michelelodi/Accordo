@@ -1,6 +1,5 @@
 package com.accordo;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -28,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
 
     private int currentVersionCode;
     private ConnectionController cc;
-    private static Context context;
     private SharedPreferencesController spc;
     private BottomNavigationView myNav;
 
@@ -37,8 +35,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-        context = getApplicationContext();
-        spc = SharedPreferencesController.getInstance();
+        spc = SharedPreferencesController.getInstance(this);
         myNav = findViewById(R.id.bottomNavigationView);
 
         firstRunSetUp();
@@ -130,8 +127,6 @@ public class MainActivity extends AppCompatActivity {
     private void getWallError(VolleyError error){
         Log.e(TAG, error.toString() + " in getWall");
     }
-
-    public static synchronized Context getAppContext() { return context; }
 
     private void setupNavbar() {
         myNav.setLabelVisibilityMode(LABEL_VISIBILITY_SELECTED);

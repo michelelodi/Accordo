@@ -37,7 +37,7 @@ public class AddChannelFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         cc = new ConnectionController(getContext());
-        spc = SharedPreferencesController.getInstance();
+        spc = SharedPreferencesController.getInstance(getContext());
         return inflater.inflate(R.layout.fragment_add_channel, container, false);
     }
 

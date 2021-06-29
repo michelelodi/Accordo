@@ -43,19 +43,12 @@ public class WallFragment extends Fragment {
     ChannelAdapter adapter;
 
     @Override
-    public void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         model = AppModel.getInstance();
         cc = new ConnectionController(getContext());
-        spc = SharedPreferencesController.getInstance();
-        db = Room.databaseBuilder(MainActivity.getAppContext(),
+        spc = SharedPreferencesController.getInstance(getContext());
+        db = Room.databaseBuilder(getContext(),
                 AccordoDB.class, "accordo_database")
                 .build();
         HandlerThread handlerThread = new HandlerThread("MyHandlerThreadWall");
