@@ -1,6 +1,5 @@
 package com.accordo;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,12 +43,10 @@ public class MapFragment extends Fragment implements
     private MapView mapView;
     private MapboxMap mMapboxMap;
     private FusedLocationProviderClient fusedLocationClient;
-    private Activity mainActivity;
     private Double mLat;
     private Double mLon;
 
     public MapFragment() {}
-
 
     public static MapFragment newInstance(String lat, String lon) {
         MapFragment fragment = new MapFragment();
@@ -75,7 +72,7 @@ public class MapFragment extends Fragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Mapbox.getInstance(getContext(), getString(R.string.mapbox_access_token));
+        Mapbox.getInstance(requireContext(), getString(R.string.mapbox_access_token));
         if (getArguments() != null) {
             mLat = Double.parseDouble(getArguments().getString(LAT));
             mLon = Double.parseDouble(getArguments().getString(LON));
@@ -99,11 +96,10 @@ public class MapFragment extends Fragment implements
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mainActivity = getActivity();
         mapView = view.findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(mainActivity);
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
     }
 
     @Override
@@ -129,7 +125,7 @@ public class MapFragment extends Fragment implements
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
         mapView.onSaveInstanceState(outState);
     }

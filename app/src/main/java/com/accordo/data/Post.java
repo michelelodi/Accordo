@@ -2,10 +2,12 @@ package com.accordo.data;
 
 import android.graphics.Bitmap;
 
+import org.jetbrains.annotations.NotNull;
+
 
 public abstract class Post {
 
-    private String pid, author, cTitle;
+    private final String pid, author, cTitle;
     private Bitmap authorProfilePicture;
 
     public Post(String pid, String author, String cTitle, Bitmap authorProfilePicture){
@@ -26,11 +28,7 @@ public abstract class Post {
     public abstract void setContent(String content);
 
     @Override
-    public String toString() {
-        return "Post{" +
-                "pid='" + pid + '\'' +
-                ", author='" + author + '\'' +
-                ", cTitle='" + cTitle + '\'' +
-                '}';
+    public @NotNull String toString() {
+        return "Post{" + "pid='" + pid + '\'' + ", author='" + author + '\'' + ", cTitle='" + cTitle + '\'' + '}';
     }
 }

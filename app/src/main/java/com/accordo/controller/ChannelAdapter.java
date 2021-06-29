@@ -18,14 +18,10 @@ public class ChannelAdapter extends RecyclerView.Adapter<ChannelViewHolder> {
 
     private LayoutInflater mInflater;
     private OnListClickListener mListClickListener;
-    private ConnectionController cc;
-    private SharedPreferencesController spc;
 
     public ChannelAdapter(Context context, OnListClickListener listClickListener) {
         mInflater = LayoutInflater.from(context);
         mListClickListener = listClickListener;
-        cc = new ConnectionController(context);
-        spc = SharedPreferencesController.getInstance(context);
     }
 
     @NonNull

@@ -8,17 +8,18 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
+
+import static com.accordo.data.AccordoValues.*;
 
 public class AppModel {
 
     private final String TAG = "MYTAG_AppModel";
-    private final String PVERSION = "pversion";
-    private final String PICTURE = "img";
 
     private static AppModel instance;
-    private List<Channel> channels;
-    private HashMap<String, ArrayList<Post>> posts;
-    private HashMap<String, HashMap<String,Object>> profilePictures;
+    private final List<Channel> channels;
+    private final HashMap<String, ArrayList<Post>> posts;
+    private final HashMap<String, HashMap<String,Object>> profilePictures;
 
     public AppModel(){
         channels = new ArrayList<>();
@@ -78,16 +79,11 @@ public class AppModel {
         profilePictures.put(uid,profilePic);
     }
 
-    public int channelSize(String cTitle) {
-        if(posts.get(cTitle) != null) return posts.get(cTitle).size();
-        else return -1;
-    }
+    public int channelSize(String cTitle) { return posts.get(cTitle) != null ? Objects.requireNonNull(posts.get(cTitle)).size() : -1; }
 
     public int channelsSize() {return channels.size();}
 
-    public void emptyWall() {
-        channels.clear();
-    }
+    public void emptyWall() { channels.clear(); }
 
     public boolean hasFullChannel(String cTitle) { return posts.containsKey(cTitle); }
 
@@ -97,35 +93,21 @@ public class AppModel {
 
     public ArrayList<Post> getChannelPosts(String cTitle) { return posts.get(cTitle); }
 
-    public Post getPost(String cTitle, int position) { return posts.get(cTitle).get(position); }
+    public Post getPost(String cTitle, int position) { return Objects.requireNonNull(posts.get(cTitle)).get(position); }
 
     public Post getPost(String cTitle, String pid) {
-        for(Post p : posts.get(cTitle)) if(p.getPid().equals(pid)) return p;
+        for(Post p : Objects.requireNonNull(posts.get(cTitle))) if(p.getPid().equals(pid)) return p;
         return null;
     }
 
     public int getPostPosition(String cTitle, Post p){
-        int pos = -1;
-        for(int i = 0; i < posts.get(cTitle).size()-1; i++)
-            if(posts.get(cTitle).get(i).getPid().equals(p.getPid())) {
-                pos = i;
-            }
-        return pos;
+        for(int i = 0; i < Objects.requireNonNull(posts.get(cTitle)).size()-1; i++) if(Objects.requireNonNull(posts.get(cTitle)).get(i).getPid().equals(p.getPid())) return i;
+        return -1;
     }
 
-    public Bitmap getProfilePicture(String uid) {
-        return profilePictures.getOrDefault(uid,null) != null ? (Bitmap) profilePictures.getOrDefault(uid,null).getOrDefault(PICTURE,null) : null;
-    }
+    public Bitmap getProfilePicture(String uid) { return profilePictures.getOrDefault(uid,null) != null ? (Bitmap) Objects.requireNonNull(profilePictures.getOrDefault(uid, null)).getOrDefault(PICTURE,null) : null; }
 
-    public int getProfilePictureVersion(String uid) {
-        return profilePictures.getOrDefault(uid,null) != null ?  Integer.parseInt(profilePictures.getOrDefault(uid,null).getOrDefault(PVERSION,null).toString()) : -1;
-    }
+    public int getProfilePictureVersion(String uid) { return profilePictures.getOrDefault(uid,null) != null ?  Integer.parseInt(Objects.requireNonNull(Objects.requireNonNull(profilePictures.getOrDefault(uid, null)).getOrDefault(PVERSION, null)).toString()) : -1; }
 
-    public void updatePost(String cTitle, Post p) {
-        for(int i = 0; i < posts.get(cTitle).size()-1; i++)
-            if(posts.get(cTitle).get(i).getPid().equals(p.getPid())) {
-                posts.get(cTitle).set(i, p);
-            }
-    }
-
+    public void updatePost(String cTitle, Post p) { for(int i = 0; i < Objects.requireNonNull(posts.get(cTitle)).size()-1; i++) if(Objects.requireNonNull(posts.get(cTitle)).get(i).getPid().equals(p.getPid())) Objects.requireNonNull(posts.get(cTitle)).set(i, p); }
 }

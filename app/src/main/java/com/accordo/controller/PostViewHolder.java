@@ -38,13 +38,9 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
         if(p instanceof ImagePost) {
             imageContent.setVisibility(View.VISIBLE);
             if(p.getContent() != null) imageContent.setImageBitmap(ImageUtils.base64ToBitmap(p.getContent()));
-            else {
-                imageContent.setImageResource(R.drawable.content_missing);
-            }
+            else imageContent.setImageResource(R.drawable.content_missing);
             imageContent.setAdjustViewBounds(true);
-            imageContent.setLayoutParams(new ConstraintLayout.LayoutParams(
-                    ConstraintLayout.LayoutParams.MATCH_PARENT,
-                    500));
+            imageContent.setLayoutParams(new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, 500));
             imageContent.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
         } else if(p instanceof LocationPost || p instanceof TextPost){
             textContent.setVisibility(View.VISIBLE);

@@ -1,6 +1,25 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Accordo</string>
-    <string name="mapbox_access_token">pk.eyJ1IjoiZG9kZ2VyOTQiLCJhIjoiY2twaDM4Yzl0Mm5oMDJ1bnhrNXp5eGFieCJ9.xDQhuV2Yrtqo8b2HCd5sGg</string>
+    <string name="mapbox_access_token" tools:ignore="Typos">pk.eyJ1IjoiZG9kZ2VyOTQiLCJhIjoiY2twaDM4Yzl0Mm5oMDJ1bnhrNXp5eGFieCJ9.xDQhuV2Yrtqo8b2HCd5sGg</string>
+    <!-- Navbar -->
+    <string name="wall_item">WALL</string>
+    <string name="addChannel_item">ADD CHANNEL</string>
+    <string name="profile_item">PROFILE</string>
+
+    <!-- ProfileFragment -->
+    <string name="profile_name_placeholder">Name</string>
+    <string name="profile_pic_description">User profile picture.</string>
+    <string name="edit_button">EDIT</string>
+    <string name="client_error">com.android.volley.ClientError</string>
+    <string name="client_fail">This name is already taken. Please try with a different one.</string>
+    <string name="name_updated">Name successfully updated!</string>
+
+    <!-- SinglePost -->
+    <string name="single_post_image_description">The image of the post.</string>
+
+    <!-- AddChannelFragment -->
+    <string name="ctitle_placeholder">Channel title</string>
+    <string name="ctitle_button">CREATE CHANNEL</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 
@@ -92,21 +111,6 @@
     </string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <!-- Navbar -->
-    <string name="wall_item">WALL</string>
-    <string name="addChannel_item">ADD CHANNEL</string>
-    <string name="profile_item">PROFILE</string>
 
-    <!-- ProfileFragment -->
-    <string name="profile_name_placeholder">Name</string>
-    <string name="profile_pic_description">User profile picture.</string>
-    <string name="edit_button">EDIT</string>
-
-    <!-- SinglePost -->
-    <string name="single_post_image_description">The image of the post.</string>
-
-    <!-- AddChannelFragment -->
-    <string name="ctitle_placeholder">Channel title</string>
-    <string name="ctitle_button">CREATE CHANNEL</string>
 
 </resources>

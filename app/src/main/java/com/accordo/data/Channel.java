@@ -4,8 +4,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class Channel {
 
-    private String cTitle;
-    private boolean creator;
+    private final String cTitle;
+    private final boolean creator;
 
     public Channel(String cTitle, boolean creator) {
         this.cTitle = cTitle;
@@ -21,10 +21,5 @@ public class Channel {
     }
 
     @Override
-    public @NotNull String toString() {
-        return "Channel{" +
-                "cTitle='" + cTitle + '\'' +
-                ", creator=" + creator +
-                '}';
-    }
+    public @NotNull String toString() { return "Channel{" + "cTitle='" + cTitle + '\'' + ", creator=" + creator + '}'; }
 }

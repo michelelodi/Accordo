@@ -1,12 +1,10 @@
 package com.accordo;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.accordo.controller.ConnectionController;
 import com.accordo.controller.SharedPreferencesController;
-import com.accordo.data.AppModel;
-import com.accordo.data.Channel;
 import com.android.volley.VolleyError;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -15,15 +13,13 @@ import org.json.JSONObject;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import static com.accordo.data.AccordoValues.*;
+
 import static com.google.android.material.bottomnavigation.LabelVisibilityMode.LABEL_VISIBILITY_SELECTED;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final String CURRENT_USER = "current_user";
-    private final String PREF_VERSION_CODE_KEY = "version";
-    private final int DOESNT_EXIST = -1;
     private final String TAG = "MYTAG_MainActivity";
-    private final String UID = "uid";
 
     private int currentVersionCode;
     private ConnectionController cc;
@@ -33,101 +29,28 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
-        spc = SharedPreferencesController.getInstance(this);
         myNav = findViewById(R.id.bottomNavigationView);
-
         firstRunSetUp();
-        /*
-        cc.getWall("" + spc.readStringFromSP(CURRENT_USER,"" + DOESNT_EXIST),
-                this::getWallResponse,
-                this::getWallError);*/
-
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container_view, WallFragment.class, new Bundle())
+                .addToBackStack(null)
+                .commit();
         setupNavbar();
-
     }
 
     private void firstRunSetUp() {
-
+        spc = SharedPreferencesController.getInstance(this);
         cc = new ConnectionController(this);
         currentVersionCode = BuildConfig.VERSION_CODE;
-
-        int savedVersionCode = spc.readIntFromSP(PREF_VERSION_CODE_KEY, DOESNT_EXIST);
-
-        if (savedVersionCode == DOESNT_EXIST) {
-            spc.writeIntToSP(PREF_VERSION_CODE_KEY, currentVersionCode);
+        int savedVersionCode = spc.readIntFromSP(PREF_VERSION_CODE_KEY, Integer.parseInt(DOESNT_EXIST));
+        if (savedVersionCode == Integer.parseInt(DOESNT_EXIST))
             cc.register(this::registrationResponse,
                     this::registrationError);
-        }else if(savedVersionCode == currentVersionCode){
-            spc.writeIntToSP(PREF_VERSION_CODE_KEY, currentVersionCode);
-            getSupportFragmentManager().beginTransaction()
-                    .setReorderingAllowed(true)
-                    .add(R.id.fragment_container_view, WallFragment.class, new Bundle())
-                    .commit();
-        }
+        spc.writeIntToSP(PREF_VERSION_CODE_KEY, currentVersionCode);
     }
 
-    private void registrationResponse(JSONObject response) {
-        try {
-
-            spc.writeStringToSP(CURRENT_USER, response.get("sid").toString());
-
-            cc.getProfile(response.get("sid").toString(), this::getProfileResponse, this::getProfileError);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void registrationError(VolleyError error) {
-        Log.e(TAG, error.toString() + " in registration");
-        currentVersionCode = DOESNT_EXIST;
-    }
-
-    private void getProfileResponse(JSONObject response) {
-        try {
-            spc.writeStringToSP(UID, response.get("uid").toString());
-            /*
-            cc.getWall(response.get("sid").toString(),
-                    this::getWallResponse,
-                    this::getWallError);
-             */
-            getSupportFragmentManager().beginTransaction()
-                    .setReorderingAllowed(true)
-                    .add(R.id.fragment_container_view, WallFragment.class, new Bundle())
-                    .commit();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void getProfileError(VolleyError error) {
-        //TODO handle error
-        Log.e(TAG, error.toString());
-    }
-
-    private void getWallResponse(JSONObject response){
-        try {
-            for (int i = 0; i < response.getJSONArray("channels").length(); i++) {
-                AppModel.getInstance().addChannel((new Channel(response.getJSONArray("channels").getJSONObject(i).get("ctitle").toString(),
-                        response.getJSONArray("channels").getJSONObject(i).get("mine").toString().equals("t"))));
-            }
-
-            getSupportFragmentManager().beginTransaction()
-                    .setReorderingAllowed(true)
-                    .add(R.id.fragment_container_view, WallFragment.class, new Bundle())
-                    .commit();
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void getWallError(VolleyError error){
-        Log.e(TAG, error.toString() + " in getWall");
-    }
-
+    @SuppressLint("NonConstantResourceId")
     private void setupNavbar() {
         myNav.setLabelVisibilityMode(LABEL_VISIBILITY_SELECTED);
         myNav.setItemIconSize(100);
@@ -157,9 +80,34 @@ public class MainActivity extends AppCompatActivity {
                 default:
                     break;
             }
-
             return true;
         });
+    }
 
+    private void registrationResponse(JSONObject response) {
+        try {
+            spc.writeStringToSP(CURRENT_USER, response.get("sid").toString());
+            cc.getProfile(response.get("sid").toString(), this::getProfileResponse,
+                    error -> cc.handleVolleyError(error,this,TAG));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void registrationError(VolleyError error) {
+        cc.handleVolleyError(error,this,TAG);
+        currentVersionCode = Integer.parseInt(DOESNT_EXIST);
+    }
+
+    private void getProfileResponse(JSONObject response) {
+        try {
+            spc.writeStringToSP(UID, response.get("uid").toString());
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container_view, WallFragment.class, new Bundle())
+                    .addToBackStack(null)
+                    .commit();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

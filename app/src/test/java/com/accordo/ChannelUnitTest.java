@@ -1,15 +1,7 @@
 package com.accordo;
 
-import com.accordo.data.Channel;
-import com.accordo.data.User;
-
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-
 public class ChannelUnitTest {
-
+/*
     private final String UID = "uid";
     private final String CTITLE = "ctitle";
     private Channel channel = new Channel(CTITLE, true);
@@ -21,5 +13,5 @@ public class ChannelUnitTest {
 
     @Test
     public void testGetCTitleSuccess(){ assertEquals(CTITLE, channel.getCTitle()); }
-
+*/
 }
