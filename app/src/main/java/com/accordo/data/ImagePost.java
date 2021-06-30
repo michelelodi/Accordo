@@ -1,14 +1,12 @@
 package com.accordo.data;
 
 
-import android.graphics.Bitmap;
-
 public class ImagePost extends Post{
 
     private String content;
 
-    public ImagePost(String pid, String author, String cTitle, Bitmap authorProfilePicture) {
-        super(pid, author, cTitle, authorProfilePicture);
+    public ImagePost(String pid, String authorUid, String author, String cTitle) {
+        super(pid, authorUid, author, cTitle);
     }
 
     @Override

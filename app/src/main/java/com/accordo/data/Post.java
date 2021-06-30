@@ -1,23 +1,22 @@
 package com.accordo.data;
 
-import android.graphics.Bitmap;
-
 import org.jetbrains.annotations.NotNull;
 
 
 public abstract class Post {
 
-    private final String pid, author, cTitle;
-    private Bitmap authorProfilePicture;
+    private final String pid, author, cTitle, authorUid;
 
-    public Post(String pid, String author, String cTitle, Bitmap authorProfilePicture){
+    public Post(String pid, String authorUid, String author, String cTitle){
         this.pid = pid;
         this.author = author;
         this.cTitle = cTitle;
-        this.authorProfilePicture = authorProfilePicture;
+        this.authorUid = authorUid;
     }
 
     public String getAuthor() {return author;}
+
+    public String getAuthorUid() { return authorUid; }
 
     public abstract String getContent();
 

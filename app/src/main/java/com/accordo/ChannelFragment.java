@@ -75,8 +75,9 @@ public class ChannelFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull @org.jetbrains.annotations.NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        MainActivity.showBottomNavigation();
         RecyclerView rv = view.findViewById(R.id.channelRecyclerView);
-        adapter = new PostAdapter(requireContext(), ChannelFragment.this::handleListClick, mCtitle);
+        adapter = new PostAdapter(requireContext(), this::handleListClick, requireActivity(), mCtitle);
         rv.setLayoutManager(new LinearLayoutManager(requireContext()));
         rv.setAdapter(adapter);
 

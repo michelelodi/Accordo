@@ -41,9 +41,9 @@ public class AddChannelFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        MainActivity.showBottomNavigation();
         cTitle = view.findViewById(R.id.newCTitle);
         Button addChannel = view.findViewById(R.id.addChannel);
-
         addChannel.setOnClickListener(v -> {
             if(cTitleCheck()){
                 cTitleString = cTitle.getText().toString();

@@ -62,6 +62,10 @@ public class WallFragment extends Fragment {
         adapter = new ChannelAdapter(requireContext(), this::handleListClick);
         rv.setLayoutManager(new LinearLayoutManager(requireContext()));
         rv.setAdapter(adapter);
+        rv.setOnScrollChangeListener((v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
+            if(oldScrollY < scrollY) MainActivity.hideBottomNavigation();
+            else MainActivity.showBottomNavigation();
+        });
         cc.getWall(spc.readStringFromSP(CURRENT_USER,"" + DOESNT_EXIST),
                 this::getWallResponse,
                 error -> cc.handleVolleyError(error, requireContext(), TAG));

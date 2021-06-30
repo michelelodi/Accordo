@@ -1,5 +1,6 @@
 package com.accordo.controller;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,9 +20,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
     private LayoutInflater mInflater;
     private OnListClickListener mListClickListener;
     private String cTitle;
+    private Context context;
+    private Activity mActivity;
 
-    public PostAdapter(Context context, OnListClickListener listClickListener, String cTitle) {
+    public PostAdapter(Context context, OnListClickListener listClickListener, Activity activity, String cTitle) {
         mInflater = LayoutInflater.from(context);
+        this.context = context;
+        mActivity = activity;
         mListClickListener = listClickListener;
         this.cTitle = cTitle;
     }
@@ -31,7 +36,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
     @Override
     public PostViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.single_post,parent,false);
-        return new PostViewHolder(view, mListClickListener);
+        return new PostViewHolder(view, mListClickListener, context, mActivity);
     }
 
     @Override
