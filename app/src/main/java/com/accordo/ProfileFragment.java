@@ -83,7 +83,6 @@ public class ProfileFragment extends Fragment {
 
     private void fillViewsWithProfileData() {
         if(!spc.readStringFromSP(spc.readStringFromSP(CURRENT_USER, DOESNT_EXIST), DOESNT_EXIST).equals("-1")) profileName.setText(spc.readStringFromSP(spc.readStringFromSP(CURRENT_USER, DOESNT_EXIST), DOESNT_EXIST));
-
         if(model.getProfilePicture(spc.readStringFromSP(UID,null)) != null)
             profilePic.setImageBitmap(model.getProfilePicture(spc.readStringFromSP(UID, null)));
         else
@@ -92,8 +91,7 @@ public class ProfileFragment extends Fragment {
                     requireActivity().runOnUiThread(() -> profilePic.setImageBitmap(ImageUtils.base64ToBitmap(db.profilePictureDao().getPicture(spc.readStringFromSP(UID,null)))));
                     model.addProfilePicture(spc.readStringFromSP(UID,null), ImageUtils.base64ToBitmap(db.profilePictureDao().getPicture(spc.readStringFromSP(UID,null))),
                             db.profilePictureDao().getVersion(spc.readStringFromSP(UID,null)));
-                }
-                else requireActivity().runOnUiThread(() -> profilePic.setImageResource(R.drawable.missing_profile));
+                } else requireActivity().runOnUiThread(() -> profilePic.setImageResource(R.drawable.missing_profile));
             }));
     }
 

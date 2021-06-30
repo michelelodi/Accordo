@@ -28,7 +28,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
-import static com.accordo.data.AccordoValues.*;
+import static com.accordo.data.AccordoValues.CTITLE;
+import static com.accordo.data.AccordoValues.CURRENT_USER;
 
 public class ChannelFragment extends Fragment {
 
@@ -68,7 +69,8 @@ public class ChannelFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) { return inflater.inflate(R.layout.fragment_channel, container, false); }
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_channel, container, false); }
 
     @Override
     public void onViewCreated(@NonNull @org.jetbrains.annotations.NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
@@ -77,6 +79,11 @@ public class ChannelFragment extends Fragment {
         adapter = new PostAdapter(requireContext(), ChannelFragment.this::handleListClick, mCtitle);
         rv.setLayoutManager(new LinearLayoutManager(requireContext()));
         rv.setAdapter(adapter);
+
+        rv.setOnScrollChangeListener((v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
+            if(oldScrollY < scrollY) MainActivity.hideBottomNavigation();
+            else MainActivity.showBottomNavigation();
+        });
 
         if(model.channelSize(mCtitle)>-1)
             for(Post post : model.getChannelPosts(mCtitle))

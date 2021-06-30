@@ -1,16 +1,17 @@
 package com.accordo.data;
 
 import android.graphics.Bitmap;
+import android.util.ArrayMap;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-import static com.accordo.data.AccordoValues.*;
+import static com.accordo.data.AccordoValues.PICTURE;
+import static com.accordo.data.AccordoValues.PVERSION;
 
 public class AppModel {
 
@@ -18,13 +19,13 @@ public class AppModel {
 
     private static AppModel instance;
     private final List<Channel> channels;
-    private final HashMap<String, ArrayList<Post>> posts;
-    private final HashMap<String, HashMap<String,Object>> profilePictures;
+    private final ArrayMap<String, ArrayList<Post>> posts;
+    private final ArrayMap<String, ArrayMap<String,Object>> profilePictures;
 
     public AppModel(){
         channels = new ArrayList<>();
-        posts = new HashMap<>();
-        profilePictures = new HashMap<>();
+        posts = new ArrayMap<>();
+        profilePictures = new ArrayMap<>();
     }
 
     public static synchronized AppModel getInstance() {
@@ -73,7 +74,7 @@ public class AppModel {
     }
 
     public void addProfilePicture(String uid, Bitmap img, String pversion) {
-        HashMap<String, Object> profilePic = new HashMap<>();
+        ArrayMap<String, Object> profilePic = new ArrayMap<>();
         profilePic.put(PVERSION, pversion);
         profilePic.put(PICTURE, img);
         profilePictures.put(uid,profilePic);

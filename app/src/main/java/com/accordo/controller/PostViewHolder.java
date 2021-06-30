@@ -14,7 +14,6 @@ import com.accordo.utils.ImageUtils;
 import org.jetbrains.annotations.NotNull;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class PostViewHolder extends RecyclerView.ViewHolder {
@@ -40,7 +39,6 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
             if(p.getContent() != null) imageContent.setImageBitmap(ImageUtils.base64ToBitmap(p.getContent()));
             else imageContent.setImageResource(R.drawable.content_missing);
             imageContent.setAdjustViewBounds(true);
-            imageContent.setLayoutParams(new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, 500));
             imageContent.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
         } else if(p instanceof LocationPost || p instanceof TextPost){
             textContent.setVisibility(View.VISIBLE);

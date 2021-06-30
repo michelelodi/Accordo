@@ -2,6 +2,7 @@ package com.accordo;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.view.View;
 
 import com.accordo.controller.ConnectionController;
 import com.accordo.controller.SharedPreferencesController;
@@ -24,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private int currentVersionCode;
     private ConnectionController cc;
     private SharedPreferencesController spc;
-    private BottomNavigationView myNav;
+    private static BottomNavigationView myNav;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,5 +110,13 @@ public class MainActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void hideBottomNavigation(){
+        myNav.setVisibility(View.GONE);
+    }
+
+    public static void showBottomNavigation(){
+        myNav.setVisibility(View.VISIBLE);
     }
 }
