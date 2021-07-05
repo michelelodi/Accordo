@@ -63,7 +63,7 @@ public class WallFragment extends Fragment {
         rv.setLayoutManager(new LinearLayoutManager(requireContext()));
         rv.setAdapter(adapter);
         rv.setOnScrollChangeListener((v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
-            if(oldScrollY < scrollY) MainActivity.hideBottomNavigation();
+            if(oldScrollY < scrollY && adapter.getAdapterPosition() == adapter.getItemCount()-1) MainActivity.hideBottomNavigation();
             else MainActivity.showBottomNavigation();
         });
         cc.getWall(spc.readStringFromSP(CURRENT_USER,"" + DOESNT_EXIST),

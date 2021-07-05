@@ -6,8 +6,8 @@ public class LocationPost extends Post{
 
     String[] content;
 
-    public LocationPost(String pid, String authorUid, String author, String cTitle) {
-        super(pid, authorUid, author, cTitle);
+    public LocationPost(String pid, String authorUid, String author, String cTitle, String pversion) {
+        super(pid, authorUid, author, cTitle, pversion);
     }
 
     @Override

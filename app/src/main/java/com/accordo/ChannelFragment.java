@@ -70,28 +70,32 @@ public class ChannelFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_channel, container, false); }
+        if(model.channelSize(mCtitle)>-1)
+            return inflater.inflate(R.layout.fragment_channel, container, false);
+        else
+            return inflater.inflate(R.layout.fragment_empty_channel, container, false);
+        }
 
     @Override
     public void onViewCreated(@NonNull @org.jetbrains.annotations.NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         MainActivity.showBottomNavigation();
-        RecyclerView rv = view.findViewById(R.id.channelRecyclerView);
-        adapter = new PostAdapter(requireContext(), this::handleListClick, requireActivity(), mCtitle);
-        rv.setLayoutManager(new LinearLayoutManager(requireContext()));
-        rv.setAdapter(adapter);
+        if(model.channelSize(mCtitle)>-1) {
+            RecyclerView rv = view.findViewById(R.id.channelRecyclerView);
+            adapter = new PostAdapter(requireContext(), this::handleListClick, requireActivity(), mCtitle);
+            rv.setLayoutManager(new LinearLayoutManager(requireContext()));
+            rv.setAdapter(adapter);
 
-        rv.setOnScrollChangeListener((v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
-            if(oldScrollY < scrollY) MainActivity.hideBottomNavigation();
-            else MainActivity.showBottomNavigation();
-        });
-
-        if(model.channelSize(mCtitle)>-1)
-            for(Post post : model.getChannelPosts(mCtitle))
-                if(post instanceof ImagePost && post.getContent() == null)
+            rv.setOnScrollChangeListener((v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
+                if(oldScrollY < scrollY && adapter.getAdapterPosition() == adapter.getItemCount()-1) MainActivity.hideBottomNavigation();
+                else MainActivity.showBottomNavigation();
+            });
+            for (Post post : model.getChannelPosts(mCtitle))
+                if (post instanceof ImagePost && post.getContent() == null)
                     cc.getPostImage(spc.readStringFromSP(CURRENT_USER, ""), post.getPid(),
                             response -> getPostImageResponse(response, post),
                             error -> cc.handleVolleyError(error, requireContext(), TAG));
+        }
     }
 
     private void handleListClick(View v, int position){

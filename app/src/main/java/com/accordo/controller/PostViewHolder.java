@@ -17,15 +17,23 @@ import com.accordo.data.LocationPost;
 import com.accordo.data.Post;
 import com.accordo.data.TextPost;
 import com.accordo.data.roomDB.AccordoDB;
+import com.accordo.data.roomDB.ProfilePicture;
 import com.accordo.utils.ImageUtils;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
+import static com.accordo.data.AccordoValues.CURRENT_USER;
+import static com.accordo.data.AccordoValues.DOESNT_EXIST;
+
 public class PostViewHolder extends RecyclerView.ViewHolder {
+
+    private final String TAG = "MYTAG_PostViewHolder";
 
     private TextView name, textContent;
     private ImageView imageContent, profilePic;
@@ -36,6 +44,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
     private AccordoDB db;
     private Activity mActivity;
     private ConnectionController cc;
+    private SharedPreferencesController spc;
 
     public PostViewHolder(@NonNull @NotNull View itemView, OnListClickListener listClickListener, Context context, Activity activity) {
         super(itemView);
@@ -55,28 +64,30 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
                 .build();
         mActivity = activity;
         cc = new ConnectionController(context);
+        spc = SharedPreferencesController.getInstance(context);
     }
 
     public void updateContent(Post p) {
         textContent.setVisibility(View.GONE);
         imageContent.setVisibility(View.GONE);
         name.setText(p.getAuthor());
-        if(model.hasProfilePic(p.getAuthorUid())) profilePic.setImageBitmap(model.getProfilePicture(p.getAuthorUid()));
+        profilePic.setImageResource(R.drawable.missing_profile);
+        if(model.hasProfilePic(p.getAuthorUid()) && model.getProfilePictureVersion(p.getAuthorUid()) == Integer.parseInt(p.getPVersion())) profilePic.setImageBitmap(model.getProfilePicture(p.getAuthorUid()));
         else {
             (new Handler(secondaryThreadLooper)).post(() -> AccordoDB.databaseWriteExecutor.execute(() -> {
-                if(db.profilePictureDao().getPicture(p.getAuthorUid()) != null){
+                if(db.profilePictureDao().getPicture(p.getAuthorUid()) != null && db.profilePictureDao().getVersion(p.getAuthorUid()).equals(p.getPVersion())){
                     Bitmap bm = ImageUtils.base64ToBitmap(db.profilePictureDao().getPicture(p.getAuthorUid()));
-                    model.addProfilePicture(p.getAuthorUid(),
-                            bm,
+                    model.addProfilePicture(p.getAuthorUid(), bm,
                             db.profilePictureDao().getVersion(p.getAuthorUid()));
                     mActivity.runOnUiThread(() -> profilePic.setImageBitmap(bm));
                 }
                 else {
-                    //TODO getPicture from server
+                    cc.getUserPicture(spc.readStringFromSP(CURRENT_USER,DOESNT_EXIST), p.getAuthorUid(),
+                            this::getProfilePictureResponse,
+                            (error -> cc.handleVolleyError(error, context, TAG)));
                 }
             }));
         }
-        profilePic.setImageResource(R.drawable.missing_profile);
         if(p instanceof ImagePost) {
             imageContent.setVisibility(View.VISIBLE);
             if(p.getContent() != null) imageContent.setImageBitmap(ImageUtils.base64ToBitmap(p.getContent()));
@@ -87,5 +98,23 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
             textContent.setVisibility(View.VISIBLE);
             textContent.setText(p.getContent());
         }
+    }
+
+    private void getProfilePictureResponse(JSONObject response) {
+        try {
+            if(!response.get("picture").toString().equals("null")) {
+                Bitmap bm = ImageUtils.base64ToBitmap(response.get("picture").toString());
+                profilePic.setImageBitmap(bm);
+                model.addProfilePicture(response.get("uid").toString(), bm, response.get("pversion").toString());
+                (new Handler(secondaryThreadLooper)).post(() -> AccordoDB.databaseWriteExecutor.execute(() -> {
+                    try {
+                        db.profilePictureDao().insertPicture(new ProfilePicture(response.get("uid").toString(),
+                                response.get("pversion").toString(), response.get("picture").toString()));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }));
+            }
+        } catch (JSONException e) { e.printStackTrace(); }
     }
 }

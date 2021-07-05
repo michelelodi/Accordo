@@ -5,13 +5,14 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class Post {
 
-    private final String pid, author, cTitle, authorUid;
+    private final String pid, author, cTitle, authorUid, pversion;
 
-    public Post(String pid, String authorUid, String author, String cTitle){
+    public Post(String pid, String authorUid, String author, String cTitle, String pversion){
         this.pid = pid;
         this.author = author;
         this.cTitle = cTitle;
         this.authorUid = authorUid;
+        this.pversion = pversion;
     }
 
     public String getAuthor() {return author;}
@@ -23,6 +24,8 @@ public abstract class Post {
     public String getCTitle() {return cTitle;}
 
     public String getPid() { return pid; }
+
+    public String getPVersion() { return pversion; }
 
     public abstract void setContent(String content);
 

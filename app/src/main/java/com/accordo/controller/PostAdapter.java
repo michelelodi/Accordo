@@ -22,6 +22,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
     private String cTitle;
     private Context context;
     private Activity mActivity;
+    private PostViewHolder holder;
 
     public PostAdapter(Context context, OnListClickListener listClickListener, Activity activity, String cTitle) {
         mInflater = LayoutInflater.from(context);
@@ -43,8 +44,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
     public void onBindViewHolder(@NonNull @NotNull PostViewHolder holder, int position) {
         Post p = AppModel.getInstance().getPost(cTitle, position);
         holder.updateContent(p);
+        this.holder = holder;
     }
 
     @Override
     public int getItemCount() { return AppModel.getInstance().channelSize(cTitle); }
+
+    public int getAdapterPosition() {
+        return holder.getAdapterPosition();
+    }
 }

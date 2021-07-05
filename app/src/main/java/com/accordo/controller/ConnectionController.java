@@ -3,7 +3,6 @@ package com.accordo.controller;
 import android.content.Context;
 import android.util.Log;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkError;
 import com.android.volley.ParseError;
 import com.android.volley.Request;
@@ -20,7 +19,12 @@ import org.json.JSONObject;
 
 import androidx.appcompat.app.AlertDialog;
 
-import static com.accordo.data.AccordoValues.*;
+import static com.accordo.data.AccordoValues.CTITLE;
+import static com.accordo.data.AccordoValues.NAME;
+import static com.accordo.data.AccordoValues.PICTURE;
+import static com.accordo.data.AccordoValues.PID;
+import static com.accordo.data.AccordoValues.SID;
+import static com.accordo.data.AccordoValues.UID;
 
 public class ConnectionController {
 
@@ -66,6 +70,16 @@ public class ConnectionController {
         requestQueue.add(new JsonObjectRequest(Request.Method.POST, url, jsonBody, responseListener, errorListener));
     }
 
+    public void getUserPicture(String sid, String uid, Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener) {
+        final JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put(SID,sid);
+            jsonBody.put(UID,uid);
+        } catch (JSONException e) { e.printStackTrace(); }
+        final String url = "https://ewserver.di.unimi.it/mobicomp/accordo/getUserPicture.php";
+        requestQueue.add(new JsonObjectRequest(Request.Method.POST, url, jsonBody, responseListener, errorListener));
+    }
+
     public void getWall(String sid, Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener) {
         final JSONObject jsonBody = new JSONObject();
         try { jsonBody.put(SID,sid); }
@@ -80,8 +94,6 @@ public class ConnectionController {
             message = "Cannot connect to Internet...Please check your connection!";
         } else if (error instanceof ServerError) {
             message = "The server could not be found. Please try again after some time!!";
-        } else if (error instanceof AuthFailureError) {
-            message = "Cannot connect to Internet...Please check your connection!";
         } else if (error instanceof ParseError) {
             message = "Parsing error! Please try again after some time!!";
         } else if (error instanceof TimeoutError) {

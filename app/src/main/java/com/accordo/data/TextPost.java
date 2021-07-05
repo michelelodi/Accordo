@@ -4,8 +4,8 @@ public class TextPost extends Post{
 
     private String content;
 
-    public TextPost(String pid, String authorUid, String author, String cTitle) {
-        super(pid, authorUid, author, cTitle);
+    public TextPost(String pid, String authorUid, String author, String cTitle, String pversion) {
+        super(pid, authorUid, author, cTitle, pversion);
     }
 
     @Override

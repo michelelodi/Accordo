@@ -5,8 +5,8 @@ public class ImagePost extends Post{
 
     private String content;
 
-    public ImagePost(String pid, String authorUid, String author, String cTitle) {
-        super(pid, authorUid, author, cTitle);
+    public ImagePost(String pid, String authorUid, String author, String cTitle, String pversion) {
+        super(pid, authorUid, author, cTitle, pversion);
     }
 
     @Override

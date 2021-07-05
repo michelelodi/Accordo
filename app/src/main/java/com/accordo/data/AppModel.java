@@ -46,19 +46,19 @@ public class AppModel {
     public void addPost(JSONObject post, String cTitle) {
         Post p = null;
         try {
-            String author = post.get("name").toString().length() > 0 ? post.get("name").toString() : "user"+post.get("uid").toString();
+            String author = !post.get("name").toString().equals("null") ? post.get("name").toString() : "user"+post.get("uid").toString();
             switch (post.get("type").toString()) {
                 case "t": {
-                    p = new TextPost(post.get("pid").toString(), post.get("uid").toString(), author, cTitle);
+                    p = new TextPost(post.get("pid").toString(), post.get("uid").toString(), author, cTitle, post.get("pversion").toString());
                     p.setContent(post.get("content").toString());
                     break;
                 }
                 case "i": {
-                    p = new ImagePost(post.get("pid").toString(), post.get("uid").toString(), author, cTitle);
+                    p = new ImagePost(post.get("pid").toString(), post.get("uid").toString(), author, cTitle, post.get("pversion").toString());
                     break;
                 }
                 case "l": {
-                    p = new LocationPost(post.get("pid").toString(), post.get("uid").toString(), author, cTitle);
+                    p = new LocationPost(post.get("pid").toString(), post.get("uid").toString(), author, cTitle, post.get("pversion").toString());
                     p.setContent(post.get("lat").toString() + "," + post.get("lon").toString());
                     break;
                 }
@@ -108,7 +108,9 @@ public class AppModel {
 
     public Bitmap getProfilePicture(String uid) { return profilePictures.getOrDefault(uid,null) != null ? (Bitmap) Objects.requireNonNull(profilePictures.getOrDefault(uid, null)).getOrDefault(PICTURE,null) : null; }
 
-    public int getProfilePictureVersion(String uid) { return profilePictures.getOrDefault(uid,null) != null ?  Integer.parseInt(Objects.requireNonNull(Objects.requireNonNull(profilePictures.getOrDefault(uid, null)).getOrDefault(PVERSION, null)).toString()) : -1; }
+    public int getProfilePictureVersion(String uid) {
+        return profilePictures.getOrDefault(uid,null) != null ? Integer.parseInt(Objects.requireNonNull(Objects.requireNonNull(profilePictures.getOrDefault(uid, null)).getOrDefault(PVERSION, null)).toString()) : -1;
+    }
 
     public void updatePost(String cTitle, Post p) { for(int i = 0; i < Objects.requireNonNull(posts.get(cTitle)).size()-1; i++) if(Objects.requireNonNull(posts.get(cTitle)).get(i).getPid().equals(p.getPid())) Objects.requireNonNull(posts.get(cTitle)).set(i, p); }
 }

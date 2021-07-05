@@ -18,6 +18,7 @@ public class ChannelAdapter extends RecyclerView.Adapter<ChannelViewHolder> {
 
     private LayoutInflater mInflater;
     private OnListClickListener mListClickListener;
+    private ChannelViewHolder holder;
 
     public ChannelAdapter(Context context, OnListClickListener listClickListener) {
         mInflater = LayoutInflater.from(context);
@@ -36,8 +37,11 @@ public class ChannelAdapter extends RecyclerView.Adapter<ChannelViewHolder> {
     public void onBindViewHolder(@NonNull @NotNull ChannelViewHolder holder, int position) {
         Channel ch = AppModel.getInstance().getChannel(position);
         holder.updateContent(ch.getCTitle(), Boolean.toString(ch.isMine()));
+        this.holder = holder;
     }
 
     @Override
     public int getItemCount() { return AppModel.getInstance().channelsSize(); }
+
+    public int getAdapterPosition() { return holder.getAdapterPosition(); }
 }
