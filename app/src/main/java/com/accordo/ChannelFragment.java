@@ -17,6 +17,7 @@ import com.accordo.data.LocationPost;
 import com.accordo.data.Post;
 import com.accordo.data.roomDB.AccordoDB;
 import com.accordo.data.roomDB.PostImage;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,6 +43,7 @@ public class ChannelFragment extends Fragment {
     private AppModel model;
     private AccordoDB db;
     private Looper secondaryThreadLooper;
+    private FloatingActionButton addPost;
 
     public ChannelFragment() {}
 
@@ -80,14 +82,27 @@ public class ChannelFragment extends Fragment {
     public void onViewCreated(@NonNull @org.jetbrains.annotations.NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         MainActivity.showBottomNavigation();
+        addPost = view.findViewById(R.id.addPostButton);
+        addPost.setOnClickListener( v -> {
+            requireActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container_view, AddPostFragment.newInstance())
+                    .addToBackStack(null)
+                    .commit();
+        });
         if(model.channelSize(mCtitle)>-1) {
             RecyclerView rv = view.findViewById(R.id.channelRecyclerView);
             adapter = new PostAdapter(requireContext(), this::handleListClick, requireActivity(), mCtitle);
             rv.setLayoutManager(new LinearLayoutManager(requireContext()));
             rv.setAdapter(adapter);
             rv.setOnScrollChangeListener((v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
-                if(oldScrollY < scrollY && adapter.getAdapterPosition() == adapter.getItemCount()-1) MainActivity.hideBottomNavigation();
-                else MainActivity.showBottomNavigation();
+                if(oldScrollY < scrollY && adapter.getAdapterPosition() >= adapter.getItemCount()-2) {
+                    MainActivity.hideBottomNavigation();
+                    addPost.hide();
+                }
+                else {
+                    MainActivity.showBottomNavigation();
+                    addPost.show();
+                }
             });
             for (Post post : model.getChannelPosts(mCtitle))
                 if (post instanceof ImagePost && post.getContent() == null)

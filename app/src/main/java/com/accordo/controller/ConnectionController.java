@@ -19,12 +19,7 @@ import org.json.JSONObject;
 
 import androidx.appcompat.app.AlertDialog;
 
-import static com.accordo.data.AccordoValues.CTITLE;
-import static com.accordo.data.AccordoValues.NAME;
-import static com.accordo.data.AccordoValues.PICTURE;
-import static com.accordo.data.AccordoValues.PID;
-import static com.accordo.data.AccordoValues.SID;
-import static com.accordo.data.AccordoValues.UID;
+import static com.accordo.data.AccordoValues.*;
 
 public class ConnectionController {
 
@@ -37,6 +32,31 @@ public class ConnectionController {
         try {
             jsonBody.put(SID,sid);
             jsonBody.put(CTITLE,cTitle);
+        } catch (JSONException e) { e.printStackTrace(); }
+        final String url = "https://ewserver.di.unimi.it/mobicomp/accordo/addChannel.php";
+        requestQueue.add(new JsonObjectRequest(Request.Method.POST, url, jsonBody, responseListener, errorListener));
+    }
+
+    public void addLocationPost(String sid, String cTitle, String type, String lat, String lon, Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener) {
+        final JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put(SID,sid);
+            jsonBody.put(CTITLE,cTitle);
+            jsonBody.put(TYPE,type);
+            jsonBody.put(LAT,lat);
+            jsonBody.put(LON,lon);
+        } catch (JSONException e) { e.printStackTrace(); }
+        final String url = "https://ewserver.di.unimi.it/mobicomp/accordo/addChannel.php";
+        requestQueue.add(new JsonObjectRequest(Request.Method.POST, url, jsonBody, responseListener, errorListener));
+    }
+
+    public void addPost(String sid, String cTitle, String type, String content, Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener) {
+        final JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put(SID,sid);
+            jsonBody.put(CTITLE,cTitle);
+            jsonBody.put(TYPE,type);
+            jsonBody.put(CONTENT,content);
         } catch (JSONException e) { e.printStackTrace(); }
         final String url = "https://ewserver.di.unimi.it/mobicomp/accordo/addChannel.php";
         requestQueue.add(new JsonObjectRequest(Request.Method.POST, url, jsonBody, responseListener, errorListener));

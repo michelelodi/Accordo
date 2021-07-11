@@ -30,11 +30,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import static com.accordo.data.AccordoValues.LAT;
+import static com.accordo.data.AccordoValues.LON;
+
 public class MapFragment extends Fragment implements
         OnMapReadyCallback {
 
-    private static final String LAT = "lat";
-    private static final String LON = "lon";
     private final String TAG = "MYTAG_MapFragment";
     private static final String LOCATION_POST_ICON = "embassy-15";
 
