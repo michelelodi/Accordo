@@ -5,6 +5,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.accordo.R;
 import com.accordo.data.AppModel;
@@ -23,6 +24,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
     private Context context;
     private Activity mActivity;
     private PostViewHolder holder;
+    private ImageView imageContent;
 
     public PostAdapter(Context context, OnListClickListener listClickListener, Activity activity, String cTitle) {
         mInflater = LayoutInflater.from(context);

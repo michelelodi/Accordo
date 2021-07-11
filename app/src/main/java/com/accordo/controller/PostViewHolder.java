@@ -90,7 +90,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
         }
         if(p instanceof ImagePost) {
             imageContent.setVisibility(View.VISIBLE);
-            if(p.getContent() != null) imageContent.setImageBitmap(ImageUtils.base64ToBitmap(p.getContent()));
+            if(p.getContent() != null && ImageUtils.base64ToBitmap(p.getContent()) != null) imageContent.setImageBitmap(ImageUtils.base64ToBitmap(p.getContent()));
             else imageContent.setImageResource(R.drawable.content_missing);
             imageContent.setAdjustViewBounds(true);
             imageContent.setScaleType(ImageView.ScaleType.CENTER_INSIDE);

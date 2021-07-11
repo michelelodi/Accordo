@@ -85,7 +85,6 @@ public class ChannelFragment extends Fragment {
             adapter = new PostAdapter(requireContext(), this::handleListClick, requireActivity(), mCtitle);
             rv.setLayoutManager(new LinearLayoutManager(requireContext()));
             rv.setAdapter(adapter);
-
             rv.setOnScrollChangeListener((v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
                 if(oldScrollY < scrollY && adapter.getAdapterPosition() == adapter.getItemCount()-1) MainActivity.hideBottomNavigation();
                 else MainActivity.showBottomNavigation();

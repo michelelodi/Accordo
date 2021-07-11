@@ -10,8 +10,11 @@ import java.io.ByteArrayOutputStream;
 public class ImageUtils {
 
     public static Bitmap base64ToBitmap(String encodedImage) {
-        byte[] decodedString = android.util.Base64.decode(encodedImage, android.util.Base64.DEFAULT);
-        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        if(org.apache.commons.codec.binary.Base64.isBase64(encodedImage)) {
+            byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
+            return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        }
+        else return null;
     }
 
     public static String bitmapToBase64(Bitmap bm) {
