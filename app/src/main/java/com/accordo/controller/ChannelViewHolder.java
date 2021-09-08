@@ -1,6 +1,5 @@
 package com.accordo.controller;
 
-import android.graphics.Typeface;
 import android.view.View;
 import android.widget.TextView;
 
@@ -13,8 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class ChannelViewHolder extends RecyclerView.ViewHolder {
 
-    private TextView cTitle;
+    private final TextView cTitle;
     private OnListClickListener mListClickListener;
+    private final String TAG = "MYTAG_ChannelViewHolder";
 
     public ChannelViewHolder(@NonNull @NotNull View itemView, OnListClickListener listClickListener) {
         super(itemView);
@@ -27,11 +27,9 @@ public class ChannelViewHolder extends RecyclerView.ViewHolder {
         this.cTitle.setText(cTitle);
         if(creator.equals("true")) {
             this.cTitle.setTextColor(itemView.getResources().getColor(R.color.primary_blue));
-            this.cTitle.setTypeface(Typeface.DEFAULT_BOLD);
+            this.cTitle.setTextSize(28);
         }
-        else {
-            this.cTitle.setTextColor(itemView.getResources().getColor(R.color.secondary_light_blue));
-            this.cTitle.setTypeface(Typeface.SANS_SERIF);
-        }
+        else
+            this.cTitle.setTextColor(itemView.getResources().getColor(R.color.grey));
     }
 }

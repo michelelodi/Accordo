@@ -7,22 +7,29 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 
+import static com.accordo.data.AccordoValues.CTITLE;
+
 public class AddPostFragment extends Fragment {
 
-
-    public AddPostFragment() {
-
-    }
+    private String cTitle;
 
 
-    public static AddPostFragment newInstance() {
+    public AddPostFragment() { }
+
+    public static AddPostFragment newInstance(String cTitle) {
         AddPostFragment fragment = new AddPostFragment();
+        Bundle args = new Bundle();
+        args.putString(CTITLE, cTitle);
+        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            cTitle = getArguments().getString(CTITLE);
+        }
     }
 
     @Override

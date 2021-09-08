@@ -48,30 +48,39 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
 
     public PostViewHolder(@NonNull @NotNull View itemView, OnListClickListener listClickListener, Context context, Activity activity) {
         super(itemView);
+
+        this.context = context;
+        mActivity = activity;
+
         HandlerThread handlerThread = new HandlerThread("MyHandlerThreadPostViewHolder");
         handlerThread.start();
         secondaryThreadLooper = handlerThread.getLooper();
+
         textContent = itemView.findViewById(R.id.textContent);
         name = itemView.findViewById(R.id.name);
         imageContent = itemView.findViewById(R.id.imageContent);
         profilePic = itemView.findViewById(R.id.profilePic);
+
         itemView.setOnClickListener(v -> postListClickListener.onListClick(v, getAdapterPosition()));
         postListClickListener = listClickListener;
-        this.context = context;
+
         model = AppModel.getInstance();
+
         db = Room.databaseBuilder(context,
                 AccordoDB.class, "accordo_database")
                 .build();
-        mActivity = activity;
+
         cc = new ConnectionController(context);
         spc = SharedPreferencesController.getInstance(context);
     }
 
     public void updateContent(Post p) {
+
         textContent.setVisibility(View.GONE);
         imageContent.setVisibility(View.GONE);
         name.setText(p.getAuthor());
         profilePic.setImageResource(R.drawable.missing_profile);
+
         if(model.hasProfilePic(p.getAuthorUid()) && model.getProfilePictureVersion(p.getAuthorUid()) == Integer.parseInt(p.getPVersion())) profilePic.setImageBitmap(model.getProfilePicture(p.getAuthorUid()));
         else {
             (new Handler(secondaryThreadLooper)).post(() -> AccordoDB.databaseWriteExecutor.execute(() -> {
@@ -93,7 +102,6 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
             if(p.getContent() != null && ImageUtils.base64ToBitmap(p.getContent()) != null) imageContent.setImageBitmap(ImageUtils.base64ToBitmap(p.getContent()));
             else imageContent.setImageResource(R.drawable.content_missing);
             imageContent.setAdjustViewBounds(true);
-            imageContent.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
         } else if(p instanceof LocationPost || p instanceof TextPost){
             textContent.setVisibility(View.VISIBLE);
             textContent.setText(p.getContent());

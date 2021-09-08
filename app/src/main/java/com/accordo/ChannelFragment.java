@@ -85,7 +85,7 @@ public class ChannelFragment extends Fragment {
         addPost = view.findViewById(R.id.addPostButton);
         addPost.setOnClickListener( v -> {
             requireActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container_view, AddPostFragment.newInstance())
+                    .replace(R.id.fragment_container_view, AddPostFragment.newInstance(mCtitle))
                     .addToBackStack(null)
                     .commit();
         });
